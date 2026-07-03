@@ -4,9 +4,9 @@ import { Hero } from "./components/Hero";
 import { StickyHeader } from "./components/StickyHeader";
 import { motion } from "motion/react";
 
-function FlipbookCard({ category, title, content }: { category: string, title: string, content: React.ReactNode }) {
+function FlipbookCard({ category, title, content, darkContent }: { category: string, title: string, content: React.ReactNode, darkContent?: React.ReactNode }) {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [phase, setPhase] = useState<'blink' | 'spill' | 'text' | 'revert'>('blink');
+  const [phase, setPhase] = useState<'idle' | 'spill' | 'text' | 'revert'>('idle');
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
   const [currentDirection, setCurrentDirection] = useState<'left' | 'right' | 'up' | 'down'>('left');
@@ -21,11 +21,11 @@ function FlipbookCard({ category, title, content }: { category: string, title: s
     const run = async () => {
       await new Promise(r => setTimeout(r, initialDelay));
       while(isMounted) {
-        setPhase('blink');
+        setPhase('idle');
         // Randomize direction before each animation cycle
         setCurrentDirection(directions[Math.floor(Math.random() * directions.length)]);
         setRevertDirection(directions[Math.floor(Math.random() * directions.length)]);
-        // 3 blinks (each 2.5s) -> 7.5s
+        // Wait in idle for 7.5s
         await new Promise(r => setTimeout(r, 7500));
         if (!isMounted) break;
         
@@ -109,7 +109,6 @@ function FlipbookCard({ category, title, content }: { category: string, title: s
               : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
           }}
         >
-          
           {/* Sliding Background Element */}
           <motion.div 
             className="absolute inset-0 bg-gray-900 z-10"
@@ -119,7 +118,7 @@ function FlipbookCard({ category, title, content }: { category: string, title: s
               y: phase === 'spill' || phase === 'text' ? '0%' : (phase === 'revert' ? getRevertPosition().y : getInitialPosition().y),
             }}
             transition={{ 
-              duration: phase === 'blink' ? 0 : 1.2, ease: [0.76, 0, 0.24, 1]
+              duration: phase === 'idle' ? 0 : 1.2, ease: [0.76, 0, 0.24, 1]
             }}
           />
 
@@ -136,37 +135,29 @@ function FlipbookCard({ category, title, content }: { category: string, title: s
             style={{ pointerEvents: phase === 'text' ? 'auto' : 'none' }}
           >
             <p className="font-cambria text-xl italic leading-relaxed">
-              "Terkadang apa yang terlihat di luar, menyembunyikan sesuatu yang lebih dalam."
+              {darkContent || '"Terkadang apa yang terlihat di luar, menyembunyikan sesuatu yang lebih dalam."'}
             </p>
           </motion.div>
 
           <motion.div 
             className="relative z-20 text-sm font-semibold text-gray-400 uppercase tracking-widest mb-4 font-sans origin-center"
             animate={
-              phase === 'blink' ? { 
-                scale: [1, 1.05, 1],
-                opacity: [0.8, 1, 0.8],
-                filter: "blur(0px)"
-              } : phase === 'spill' || phase === 'text' ? {
+              phase === 'spill' || phase === 'text' ? {
                 scale: 0.95,
                 opacity: 0,
                 filter: "blur(12px)",
                 x: currentDirection === 'left' ? '50%' : currentDirection === 'right' ? '-50%' : '0%',
                 y: currentDirection === 'up' ? '-50%' : currentDirection === 'down' ? '50%' : '0%',
               } : {
-                scale: 0.95,
-                opacity: 0,
+                scale: 1,
+                opacity: 1,
                 filter: "blur(0px)",
                 x: '0%',
                 y: '0%',
               }
             }
             transition={
-              phase === 'blink' ? {
-                duration: 2.5, 
-                repeat: Infinity, 
-                ease: "easeInOut" 
-              } : phase === 'spill' ? {
+              phase === 'spill' ? {
                 duration: 1.2,
                 ease: [0.76, 0, 0.24, 1]
               } : {
@@ -180,30 +171,22 @@ function FlipbookCard({ category, title, content }: { category: string, title: s
           <motion.div 
             className="relative z-20 text-3xl font-bold text-gray-900 leading-tight mb-8 font-serif origin-center"
             animate={
-              phase === 'blink' ? { 
-                scale: [1, 1.05, 1],
-                opacity: [0.8, 1, 0.8],
-                filter: "blur(0px)"
-              } : phase === 'spill' || phase === 'text' ? {
+              phase === 'spill' || phase === 'text' ? {
                 scale: 0.95,
                 opacity: 0,
                 filter: "blur(12px)",
                 x: currentDirection === 'left' ? '50%' : currentDirection === 'right' ? '-50%' : '0%',
                 y: currentDirection === 'up' ? '-50%' : currentDirection === 'down' ? '50%' : '0%',
               } : {
-                scale: 0.95,
-                opacity: 0,
+                scale: 1,
+                opacity: 1,
                 filter: "blur(0px)",
                 x: '0%',
                 y: '0%',
               }
             }
             transition={
-              phase === 'blink' ? {
-                duration: 2.5, 
-                repeat: Infinity, 
-                ease: "easeInOut" 
-              } : phase === 'spill' ? {
+              phase === 'spill' ? {
                 duration: 1.2,
                 ease: [0.76, 0, 0.24, 1]
               } : {
@@ -239,7 +222,7 @@ import { CVFlipbook } from "./components/CVFlipbook";
 import { FlipbookReveal } from "./components/FlipbookReveal";
 import { FloatingMetaButton } from "./components/FloatingMetaButton";
 import { FloatingDocuments } from "./components/FloatingDocuments";
-import { Star } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 function App() {
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
@@ -490,15 +473,7 @@ function App() {
       type: "Technical Specification",
       tags: ["Architecture", "System Design", "Enterprise"],
       link: "#",
-    },
-    {
-      title: "Developer Onboarding Guide",
-      description:
-        "Complete onboarding documentation for new developers including setup instructions, coding standards, and best practices.",
-      type: "Internal Documentation",
-      tags: ["Onboarding", "Developer", "Standards"],
-      link: "#",
-    },
+    }
   ];
 
   const creativeProjects = [
@@ -536,7 +511,7 @@ function App() {
                 100% { transform: translateX(-50%); }
               }
               .animate-marquee {
-                animation: marquee 80s linear infinite;
+                animation: marquee 88s linear infinite;
               }
             `}} />
             <div 
@@ -584,53 +559,77 @@ function App() {
       <section id="akademik" className="py-[25pt] bg-[#F9F8F5]">
         <div className="w-full px-[10pt]">
           
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 w-full max-w-5xl mx-auto mb-20 justify-items-center">
-            {/* Left Column: Creative Projects */}
-            <div className="flex flex-col items-center w-full gap-8">
-              
-              <FlipbookCard 
-                category="Proyek Logistik I"
-                title="Business Process"
-                content="Tugas besar berupa observasi 𝗣𝗿𝗼𝘀𝗲𝘀 𝗕𝗶𝘀𝗻𝗶𝘀 milik perusahaan untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟭 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟮 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-              />
-              
-              <FlipbookCard 
-                category="Proyek Logistik II"
-                title="Design Thinking"
-                content="Tugas besar berbentuk 𝗗𝗲𝘀𝗶𝗴𝗻 𝗧𝗵𝗶𝗻𝗸𝗶𝗻𝗴 untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟮 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟯 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-              />
-
-              <FlipbookCard 
-                category="Proyek Logistik III"
-                title="House of Quality"
-                content="Tugas besar berbentuk 𝗛𝗼𝘂𝘀𝗲 𝗼𝗳 𝗤𝘂𝗮𝗹𝗶𝘁𝘆 (𝗛𝗢𝗤) untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟯 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟱 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-              />
-            </div>
-
-            {/* Right Column: Skripsi & Seminar */}
-            <div className="flex flex-col items-center w-full gap-8">
-              <FlipbookCard 
-                category="Kerja Praktik II"
-                title="Skripsi"
-                content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟮 dan 𝗦𝗸𝗿𝗶𝗽𝘀𝗶 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟴 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-              />
-
-              <FlipbookCard 
-                category="Seminar"
-                title="International Joint Effort Seminar Programme"
-                content="Seminar dan Kompetisi Internasional dengan tema Inovasi pada Logistik dan Supply Chain Management hasil kolaborasi dengan Politeknik Nilai Malaysia"
-              />
-
-              <FlipbookCard 
-                category="Buku Akademik"
-                title="Rencana Penelitian"
-                content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟭 dan 𝗟𝗮𝗽𝗼𝗿𝗮𝗻 𝗔𝗸𝗵𝗶𝗿 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟳 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-              />
+          <div className="relative w-full overflow-hidden flex py-8 mb-12">
+            <style dangerouslySetInnerHTML={{__html: `
+              @keyframes marquee-reverse {
+                0% { transform: translateX(-50%); }
+                100% { transform: translateX(0%); }
+              }
+              .animate-marquee-reverse {
+                animation: marquee-reverse 66s linear infinite;
+              }
+            `}} />
+            <div 
+              className={`flex gap-8 px-4 animate-marquee-reverse min-w-max group cursor-pointer`}
+              style={{ animationPlayState: isCarouselPaused ? 'paused' : 'running' }}
+              onClick={() => setIsCarouselPaused(!isCarouselPaused)}
+            >
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="flex gap-8 min-w-max items-start">
+                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                    <FlipbookCard 
+                      category="Proyek Logistik I"
+                      title="Business Process"
+                      content="Tugas besar berupa observasi 𝗣𝗿𝗼𝘀𝗲𝘀 𝗕𝗶𝘀𝗻𝗶𝘀 milik perusahaan untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟭 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟮 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
+                      darkContent='"Observasi TKBM pada PT. Persero Batam"'
+                    />
+                  </div>
+                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                    <FlipbookCard 
+                      category="Proyek Logistik II"
+                      title="Design Thinking"
+                      content="Tugas besar berbentuk 𝗗𝗲𝘀𝗶𝗴𝗻 𝗧𝗵𝗶𝗻𝗸𝗶𝗻𝗴 untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟮 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟯 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
+                      darkContent='"Pembungkus Paket dari Pati Singkong"'
+                    />
+                  </div>
+                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                    <FlipbookCard 
+                      category="Proyek Logistik III"
+                      title="House of Quality"
+                      content="Tugas besar berbentuk 𝗛𝗼𝘂𝘀𝗲 𝗼𝗳 𝗤𝘂𝗮𝗹𝗶𝘁𝘆 (𝗛𝗢𝗤) untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟯 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟱 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
+                    />
+                  </div>
+                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                    <FlipbookCard 
+                      category="Kerja Praktik II"
+                      title="Skripsi"
+                      content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟮 dan 𝗦𝗸𝗿𝗶𝗽𝘀𝗶 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟴 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
+                      darkContent='"Analisis Kualitas Pelayanan PT. Pos Indonesia (Persero) Cabang KPRK Sintang 78600 untuk Meningkatkan Kepuasan Pelanggan dengan Integrasi ServQual dan IPA"'
+                    />
+                  </div>
+                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                    <FlipbookCard 
+                      category="Seminar"
+                      title="International Joint Effort Seminar Programme on Logistics and Supply Chain"
+                      content="Seminar dan Kompetisi Internasional dengan tema Inovasi pada Logistik dan Supply Chain Management hasil kolaborasi dengan Politeknik Nilai Malaysia"
+                      darkContent='"International Joint Effort Seminar Programme on Logistics and Supply Chain"'
+                    />
+                  </div>
+                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                    <FlipbookCard 
+                      category="Buku Akademik"
+                      title="Rencana Penelitian"
+                      content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟭 dan 𝗟𝗮𝗽𝗼𝗿𝗮𝗻 𝗔𝗸𝗵𝗶𝗿 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟳 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
+                      darkContent='"Optimalisasi Persediaan Toyota Motor Oil (TMO) Engine Oil pada Gudang Suku Cadang Toyota Auto2000 Cabang Pasteur Menggunakan Metode EOQ Deterministik dan Least Unit Cost"'
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
           <div id="transcript" className="text-center mb-12">
-            <h3 className="text-3xl mb-4 text-gray-900 font-serif">Transkrip Nilai</h3>
+            <h3 className="text-3xl mb-4 text-gray-900 font-serif">Sarjana Terapan Logistik (S.Tr.Log.)</h3>
           </div>
           <TranscriptTable />
         </div>
@@ -640,29 +639,51 @@ function App() {
       <section id="proyek" className="py-[25pt] bg-[#F9F8F5]">
         <div className="w-full px-[10pt]">
 
-          <div id="documentation">
-            <h3 className="text-3xl text-center mb-8 text-gray-900 font-serif">Profile Qualifications</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-8">
-              {documentation.slice(docPage * 6, docPage * 6 + 6).map((doc, index) => (
-                <DocumentationCard key={index} {...doc} />
-              ))}
-            </div>
-            {documentation.length > 6 ? (
-              <div className="flex justify-center items-center gap-2 mb-16">
-                {Array.from({ length: Math.ceil(documentation.length / 6) }).map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setDocPage(idx)}
-                    className={`w-3 h-3 rounded-full transition-colors ${
-                      docPage === idx ? "bg-gray-800" : "bg-gray-300 hover:bg-gray-400"
-                    }`}
-                    aria-label={`Go to page ${idx + 1}`}
-                  />
+          <div id="documentation" className="relative">
+            <div className="flex items-center justify-center gap-4 max-w-7xl mx-auto mb-16">
+              <button
+                onClick={() => setDocPage((prev) => Math.max(0, prev - 1))}
+                disabled={docPage === 0}
+                className="p-2 rounded-full bg-white shadow-md text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hidden md:flex shrink-0"
+                aria-label="Previous page"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
+                {documentation.slice(docPage * 3, docPage * 3 + 3).map((doc, index) => (
+                  <DocumentationCard key={index} {...doc} />
                 ))}
               </div>
-            ) : (
-              <div className="mb-16"></div>
-            )}
+
+              <button
+                onClick={() => setDocPage((prev) => Math.min(Math.ceil(documentation.length / 3) - 1, prev + 1))}
+                disabled={docPage >= Math.ceil(documentation.length / 3) - 1 || documentation.length === 0}
+                className="p-2 rounded-full bg-white shadow-md text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hidden md:flex shrink-0"
+                aria-label="Next page"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
+            
+            <div className="flex justify-center items-center gap-4 -mt-8 mb-16 md:hidden">
+              <button
+                onClick={() => setDocPage((prev) => Math.max(0, prev - 1))}
+                disabled={docPage === 0}
+                className="p-2 rounded-full bg-white shadow-md text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                aria-label="Previous page"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <button
+                onClick={() => setDocPage((prev) => Math.min(Math.ceil(documentation.length / 3) - 1, prev + 1))}
+                disabled={docPage >= Math.ceil(documentation.length / 3) - 1 || documentation.length === 0}
+                className="p-2 rounded-full bg-white shadow-md text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                aria-label="Next page"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
           </div>
         </div>
       </section>

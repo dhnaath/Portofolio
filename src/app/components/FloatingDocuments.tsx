@@ -1,6 +1,6 @@
 import { FileText } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { CVFlipbook } from "./CVFlipbook";
 
 function FloatingDocumentCard({ 
@@ -15,15 +15,28 @@ function FloatingDocumentCard({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Don't close if modal is open
+      if (isModalOpen) return;
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsExpanded(false);
+        setTimeout(() => setIsFlipped(false), 300);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isModalOpen]);
 
   return (
     <>
       <div 
+        ref={containerRef}
         className={`relative z-50 flex items-center`}
-        onMouseEnter={() => setIsExpanded(true)}
-        onMouseLeave={() => {
-          setIsExpanded(false);
-          setTimeout(() => setIsFlipped(false), 300);
+        onClick={() => {
+           if (!isExpanded) setIsExpanded(true);
         }}
       >
         <motion.div

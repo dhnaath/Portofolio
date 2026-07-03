@@ -1,18 +1,29 @@
 import { MoreVertical } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export function FloatingMetaButton() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsExpanded(false);
+        setTimeout(() => setIsFlipped(false), 300);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div 
+      ref={containerRef}
       className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex items-center"
-      onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => {
-        setIsExpanded(false);
-        setTimeout(() => setIsFlipped(false), 300);
+      onClick={() => {
+         if (!isExpanded) setIsExpanded(true);
       }}
     >
       <motion.div

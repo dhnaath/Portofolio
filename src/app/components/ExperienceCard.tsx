@@ -143,7 +143,7 @@ export function ExperienceCard({
                 <img src={companyLogo} alt={`${company} logo`} className="w-16 h-16 object-contain shrink-0" />
               )}
               <div>
-                <h3 className="text-2xl mb-2 text-gray-900 font-cambria">{title}</h3>
+                <h3 className="text-2xl mb-2 text-gray-900 font-serif">{title}</h3>
                 <p className="text-xl text-gray-700">{company}</p>
               </div>
             </div>
@@ -173,8 +173,8 @@ export function ExperienceCard({
           
           <div className="relative">
             <div className={`overflow-hidden transition-all duration-300 relative ${isExpanded ? 'max-h-[2000px]' : 'max-h-[100pt]'}`}>
-              <p className="font-semibold text-gray-900 mb-2 font-cambria">Key of Responsibilities:</p>
-              <ol className="list-decimal list-outside ml-4 space-y-1 text-gray-700 text-justify pb-8 font-serif">
+              <p className="font-semibold text-gray-900 mb-2 font-sans">Key of Responsibilities:</p>
+              <ol className="list-decimal list-outside ml-4 space-y-1 text-gray-700 text-justify pb-8 font-cambria">
                 {achievements.map((achievement, index) => (
                   <li key={index}>{achievement}</li>
                 ))}

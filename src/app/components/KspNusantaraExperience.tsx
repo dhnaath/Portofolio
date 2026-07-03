@@ -135,7 +135,7 @@ export function KspNusantaraExperience({ company, companyLogo, positions, descri
                 <img src={companyLogo} alt={`${company} logo`} className="w-16 h-16 object-contain shrink-0" />
               )}
               <div>
-                <h3 className="text-2xl mb-2 text-gray-900 font-cambria">{company}</h3>
+                <h3 className="text-2xl mb-2 text-gray-900 font-serif">{company}</h3>
               </div>
             </div>
           </div>
@@ -167,7 +167,7 @@ export function KspNusantaraExperience({ company, companyLogo, positions, descri
 
                       <div>
                         <div>
-                          <p className="font-semibold text-gray-900 mb-2 font-cambria">Key of Responsibilities:</p>
+                          <p className="font-semibold text-gray-900 mb-2 font-sans">Key of Responsibilities:</p>
                           <ol className="list-decimal list-outside ml-4 space-y-1 text-gray-700 text-justify">
                             {pos.achievements.map((achievement, i) => (
                               <li key={i}>{achievement}</li>

@@ -10,7 +10,7 @@ export function Hero() {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden mb-12 shadow-lg ring-4 ring-white"
+          className="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden mb-12 shadow-lg ring-4 ring-gray-900"
         >
           <img 
             src="https://github.com/dhnaath/Website-Portofolio/blob/main/1759679247410.Salinan%20DSCF0132@1715148060.JPG?raw=true" 
@@ -23,7 +23,7 @@ export function Hero() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 font-sans tracking-tight mb-8 uppercase"
+          className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 font-serif tracking-tight mb-8 uppercase"
         >
           DHIA NAJMI ATHALLAH
         </motion.h1>
@@ -32,10 +32,10 @@ export function Hero() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-          className="flex flex-col gap-6 text-gray-700 font-serif text-lg md:text-xl leading-relaxed max-w-[calc(48rem+220pt)]"
+          className="flex flex-col gap-6 text-gray-700 font-cambria text-lg md:text-xl leading-relaxed max-w-[calc(48rem+220pt)]"
         >
           <p>
-            Hi, I'm Dhia Najmi Athallah.
+            <em>Lifelong Learner</em>
           </p>
           <p>
             Guided by the principles of <strong>Value-Based Management</strong>, I deliver a comprehensive framework designed as an <strong>Infinity &infin; Cycle</strong>. The tailored solutions of <em>Surety, Flow, Build, Grow,</em> and <em>Legacy</em> principles serve as interconnected phases that form a unified whole that drive resilient and sustainable individual and collective economic stability.

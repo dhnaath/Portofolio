@@ -32,9 +32,9 @@ export function DocumentationCard({
           </a>
         )}
       </div>
-      <h3 className="text-xl mb-2 text-gray-900">{title}</h3>
-      <p className="text-sm text-gray-500 mb-3">{type}</p>
-      <p className="text-gray-700 mb-4">{description}</p>
+      <h3 className="text-xl mb-2 text-gray-900 font-serif">{title}</h3>
+      <p className="text-sm text-gray-500 mb-3 font-sans">{type}</p>
+      <p className="text-gray-700 mb-4 font-cambria">{description}</p>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag, index) => (
           <span

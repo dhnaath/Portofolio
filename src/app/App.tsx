@@ -135,7 +135,7 @@ function FlipbookCard({ category, title, content }: { category: string, title: s
             transition={{ duration: 0.6, ease: "easeOut" }}
             style={{ pointerEvents: phase === 'text' ? 'auto' : 'none' }}
           >
-            <p className="font-serif text-xl italic leading-relaxed">
+            <p className="font-cambria text-xl italic leading-relaxed">
               "Terkadang apa yang terlihat di luar, menyembunyikan sesuatu yang lebih dalam."
             </p>
           </motion.div>
@@ -178,7 +178,7 @@ function FlipbookCard({ category, title, content }: { category: string, title: s
             {category}
           </motion.div>
           <motion.div 
-            className="relative z-20 text-3xl font-bold text-gray-900 leading-tight mb-8 font-cambria origin-center"
+            className="relative z-20 text-3xl font-bold text-gray-900 leading-tight mb-8 font-serif origin-center"
             animate={
               phase === 'blink' ? { 
                 scale: [1, 1.05, 1],
@@ -218,8 +218,8 @@ function FlipbookCard({ category, title, content }: { category: string, title: s
 
         {/* Back Face (Inside Page) */}
         <div className="absolute w-full h-full bg-[#fdfbf7] rounded-[2rem] border border-gray-200 shadow-lg p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          <div className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-6 pb-4 border-b border-gray-200 w-full font-cambria">{title}</div>
-          <div className="text-lg md:text-xl font-medium text-gray-800 leading-snug font-serif">
+          <div className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-6 pb-4 border-b border-gray-200 w-full font-sans">{title}</div>
+          <div className="text-lg md:text-xl font-medium text-gray-800 leading-snug font-cambria">
             {content}
           </div>
         </div>
@@ -630,7 +630,7 @@ function App() {
           </div>
 
           <div id="transcript" className="text-center mb-12">
-            <h3 className="text-3xl mb-4 text-gray-900">Transkrip Nilai</h3>
+            <h3 className="text-3xl mb-4 text-gray-900 font-serif">Transkrip Nilai</h3>
           </div>
           <TranscriptTable />
         </div>
@@ -641,7 +641,7 @@ function App() {
         <div className="w-full px-[10pt]">
 
           <div id="documentation">
-            <h3 className="text-3xl text-center mb-8 text-gray-900">Profile Qualifications</h3>
+            <h3 className="text-3xl text-center mb-8 text-gray-900 font-serif">Profile Qualifications</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-8">
               {documentation.slice(docPage * 6, docPage * 6 + 6).map((doc, index) => (
                 <DocumentationCard key={index} {...doc} />

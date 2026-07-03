@@ -5,68 +5,67 @@ interface Course {
   mataKuliah: string;
   sks: number;
   nilai: number;
+  semester: number;
 }
 
 const courses: Course[] = [
-  // 12 SKS
-  { mataKuliah: "Kerja Praktik 1", sks: 12, nilai: 3.0 },
-  { mataKuliah: "Kerja Praktik 2", sks: 12, nilai: 3.5 },
-  // 6 SKS
-  { mataKuliah: "Laporan Akhir", sks: 6, nilai: 4.0 },
-  { mataKuliah: "Skripsi", sks: 6, nilai: 3.5 },
-  // 3 SKS
-  { mataKuliah: "Manajemen Distribusi + Praktikum", sks: 3, nilai: 3.5 },
-  { mataKuliah: "Manajemen Pergudangan + Praktikum", sks: 3, nilai: 3.5 },
-  { mataKuliah: "Manajemen Persediaan + Praktikum", sks: 3, nilai: 4.0 },
-  { mataKuliah: "Sistem dan Manajemen Transportasi + Praktikum", sks: 3, nilai: 2.0 },
-  { mataKuliah: "Riset Operasi + Praktikum", sks: 3, nilai: 2.0 },
-  { mataKuliah: "Pengendalian Kualitas + Praktikum", sks: 3, nilai: 3.0 },
-  { mataKuliah: "Manajemen Freight + Praktikum", sks: 3, nilai: 2.0 },
-  { mataKuliah: "Barang-Barang Berbahaya + Praktikum", sks: 3, nilai: 4.0 },
-  { mataKuliah: "Ekspor Impor + Praktikum", sks: 3, nilai: 3.0 },
-  { mataKuliah: "Analisis Keputusan + Praktikum", sks: 3, nilai: 3.0 },
-  { mataKuliah: "Aplikasi Dasar SAP (ERP) + Praktikum", sks: 3, nilai: 4.0 },
-  { mataKuliah: "Manajemen Proyek + Praktikum", sks: 3, nilai: 2.0 },
-  { mataKuliah: "Pemodelan dan Simulasi Logistik & Rantai Pasok + Praktikum", sks: 3, nilai: 3.0 },
-  // 2 SKS
-  { mataKuliah: "Pengantar Logistik", sks: 2, nilai: 2.0 },
-  { mataKuliah: "Pengantar Manajemen", sks: 2, nilai: 4.0 },
-  { mataKuliah: "Literasi Teknologi 1 + Praktikum", sks: 2, nilai: 4.0 },
-  { mataKuliah: "Matematika Bisnis + Praktikum", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Pengantar Ekonomi", sks: 2, nilai: 4.0 },
-  { mataKuliah: "Pendidikan Agama", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Pendidikan Pancasila", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Bahasa Indonesia", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Bahasa Inggris 1 + Praktikum", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Manajemen Pembelian + Praktikum", sks: 2, nilai: 4.0 },
-  { mataKuliah: "Pengantar SCM", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Manajemen SDM", sks: 2, nilai: 4.0 },
-  { mataKuliah: "Literasi Teknologi 2 + Praktikum", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Statistika Bisnis + Praktikum", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Proyek 1", sks: 2, nilai: 4.0 },
-  { mataKuliah: "Pengantar Akuntansi & Perpajakan + Praktikum", sks: 2, nilai: 4.0 },
-  { mataKuliah: "PKN", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Bahasa Inggris 2 + Praktikum", sks: 2, nilai: 3.0 },
-  { mataKuliah: "SIM Logistik + Praktikum", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Proyek 2", sks: 2, nilai: 4.0 },
-  { mataKuliah: "Bahasa Inggris 3", sks: 2, nilai: 2.0 },
-  { mataKuliah: "Global & Marketing Logistics", sks: 2, nilai: 4.0 },
-  { mataKuliah: "Kemasan Pelindung & Penanganan Material + Praktikum", sks: 2, nilai: 2.5 },
-  { mataKuliah: "Bahasa Inggris 4 + Praktikum", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Etika Profesi", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Kepabeanan + Praktikum", sks: 2, nilai: 4.0 },
-  { mataKuliah: "Proyek 3", sks: 2, nilai: 4.0 },
-  { mataKuliah: "Akuntansi Biaya Logistik + Praktikum", sks: 2, nilai: 3.5 },
-  { mataKuliah: "Asuransi + Praktikum", sks: 2, nilai: 2.5 },
-  { mataKuliah: "Proses Bisnis Logistik", sks: 2, nilai: 3.0 },
-  { mataKuliah: "E-Commerce + Praktikum", sks: 2, nilai: 3.5 },
-  { mataKuliah: "Pelayanan Pelanggan", sks: 2, nilai: 2.5 },
-  { mataKuliah: "Kewirausahaan", sks: 2, nilai: 4.0 },
-  { mataKuliah: "Kapita Selekta", sks: 2, nilai: 3.5 },
-  { mataKuliah: "Metode Penelitian", sks: 2, nilai: 4.0 },
-  { mataKuliah: "Hukum Kontrak dan Agen", sks: 2, nilai: 3.0 },
-  { mataKuliah: "Logistik Halal", sks: 2, nilai: 3.0 },
+    { mataKuliah: "Kerja Praktik 1", sks: 12, nilai: 3, semester: 7 },
+  { mataKuliah: "Kerja Praktik 2", sks: 12, nilai: 3.5, semester: 8 },
+  { mataKuliah: "Laporan Akhir", sks: 6, nilai: 4, semester: 7 },
+  { mataKuliah: "Skripsi", sks: 6, nilai: 3.5, semester: 8 },
+  { mataKuliah: "Manajemen Distribusi + Praktikum", sks: 3, nilai: 3.5, semester: 3 },
+  { mataKuliah: "Manajemen Pergudangan + Praktikum", sks: 3, nilai: 3.5, semester: 4 },
+  { mataKuliah: "Manajemen Persediaan + Praktikum", sks: 3, nilai: 4, semester: 3 },
+  { mataKuliah: "Sistem dan Manajemen Transportasi + Praktikum", sks: 3, nilai: 2, semester: 3 },
+  { mataKuliah: "Riset Operasi + Praktikum", sks: 3, nilai: 2, semester: 3 },
+  { mataKuliah: "Pengendalian Kualitas + Praktikum", sks: 3, nilai: 3, semester: 3 },
+  { mataKuliah: "Manajemen Freight + Praktikum", sks: 3, nilai: 2, semester: 4 },
+  { mataKuliah: "Barang-Barang Berbahaya + Praktikum", sks: 3, nilai: 4, semester: 4 },
+  { mataKuliah: "Ekspor Impor + Praktikum", sks: 3, nilai: 3, semester: 4 },
+  { mataKuliah: "Analisis Keputusan + Praktikum", sks: 3, nilai: 3, semester: 5 },
+  { mataKuliah: "Aplikasi Dasar SAP (ERP) + Praktikum", sks: 3, nilai: 4, semester: 5 },
+  { mataKuliah: "Manajemen Proyek + Praktikum", sks: 3, nilai: 2, semester: 6 },
+  { mataKuliah: "Pemodelan dan Simulasi Logistik & Rantai Pasok + Praktikum", sks: 3, nilai: 3, semester: 6 },
+  { mataKuliah: "Pengantar Logistik", sks: 2, nilai: 2, semester: 1 },
+  { mataKuliah: "Pengantar Manajemen", sks: 2, nilai: 4, semester: 1 },
+  { mataKuliah: "Literasi Teknologi 1 + Praktikum", sks: 2, nilai: 4, semester: 1 },
+  { mataKuliah: "Matematika Bisnis + Praktikum", sks: 2, nilai: 3, semester: 1 },
+  { mataKuliah: "Pengantar Ekonomi", sks: 2, nilai: 4, semester: 1 },
+  { mataKuliah: "Pendidikan Agama", sks: 2, nilai: 3, semester: 1 },
+  { mataKuliah: "Pendidikan Pancasila", sks: 2, nilai: 3, semester: 1 },
+  { mataKuliah: "Bahasa Indonesia", sks: 2, nilai: 3, semester: 1 },
+  { mataKuliah: "Bahasa Inggris 1 + Praktikum", sks: 2, nilai: 3, semester: 1 },
+  { mataKuliah: "Manajemen Pembelian + Praktikum", sks: 2, nilai: 4, semester: 2 },
+  { mataKuliah: "Pengantar SCM", sks: 2, nilai: 3, semester: 2 },
+  { mataKuliah: "Manajemen SDM", sks: 2, nilai: 4, semester: 2 },
+  { mataKuliah: "Literasi Teknologi 2 + Praktikum", sks: 2, nilai: 3, semester: 2 },
+  { mataKuliah: "Statistika Bisnis + Praktikum", sks: 2, nilai: 3, semester: 2 },
+  { mataKuliah: "Proyek 1", sks: 2, nilai: 4, semester: 2 },
+  { mataKuliah: "Pengantar Akuntansi & Perpajakan + Praktikum", sks: 2, nilai: 4, semester: 2 },
+  { mataKuliah: "PKN", sks: 2, nilai: 3, semester: 2 },
+  { mataKuliah: "Bahasa Inggris 2 + Praktikum", sks: 2, nilai: 3, semester: 2 },
+  { mataKuliah: "SIM Logistik + Praktikum", sks: 2, nilai: 3, semester: 3 },
+  { mataKuliah: "Proyek 2", sks: 2, nilai: 4, semester: 3 },
+  { mataKuliah: "Bahasa Inggris 3", sks: 2, nilai: 2, semester: 3 },
+  { mataKuliah: "Global & Marketing Logistics", sks: 2, nilai: 4, semester: 4 },
+  { mataKuliah: "Kemasan Pelindung & Penanganan Material + Praktikum", sks: 2, nilai: 2.5, semester: 4 },
+  { mataKuliah: "Bahasa Inggris 4 + Praktikum", sks: 2, nilai: 3, semester: 4 },
+  { mataKuliah: "Etika Profesi", sks: 2, nilai: 3, semester: 5 },
+  { mataKuliah: "Kepabeanan + Praktikum", sks: 2, nilai: 4, semester: 5 },
+  { mataKuliah: "Proyek 3", sks: 2, nilai: 4, semester: 5 },
+  { mataKuliah: "Akuntansi Biaya Logistik + Praktikum", sks: 2, nilai: 3.5, semester: 5 },
+  { mataKuliah: "Asuransi + Praktikum", sks: 2, nilai: 2.5, semester: 5 },
+  { mataKuliah: "Proses Bisnis Logistik", sks: 2, nilai: 3, semester: 5 },
+  { mataKuliah: "E-Commerce + Praktikum", sks: 2, nilai: 3.5, semester: 5 },
+  { mataKuliah: "Pelayanan Pelanggan", sks: 2, nilai: 2.5, semester: 6 },
+  { mataKuliah: "Kewirausahaan", sks: 2, nilai: 4, semester: 6 },
+  { mataKuliah: "Kapita Selekta", sks: 2, nilai: 3.5, semester: 6 },
+  { mataKuliah: "Metode Penelitian", sks: 2, nilai: 4, semester: 6 },
+  { mataKuliah: "Hukum Kontrak dan Agen", sks: 2, nilai: 3, semester: 6 },
+  { mataKuliah: "Logistik Halal", sks: 2, nilai: 3, semester: 6 },
+
 ];
+
 
 const getLetterGrade = (nilai: number) => {
   if (nilai === 4.0) return 'A';
@@ -125,30 +124,44 @@ const repeatedCourses: string[] = [
 
 export function TranscriptTable() {
   const [sortOrder, setSortOrder] = useState<'default' | 'asc' | 'desc'>('default');
+  const [sortSKS, setSortSKS] = useState<'default' | 'asc' | 'desc'>('default');
   const [selectedSemester, setSelectedSemester] = useState<number | 'all'>(1);
 
   const sortedCourses = useMemo(() => {
     let filtered = courses;
     if (selectedSemester !== 'all') {
-      filtered = courses.filter((c, i) => {
-        // Assume courses are distributed across 8 semesters for now
-        // This is a placeholder since we don't have actual semester data
-        const mockSemester = Math.floor(i / Math.ceil(courses.length / 8)) + 1;
-        return (c as any).semester ? (c as any).semester === selectedSemester : mockSemester === selectedSemester;
+      filtered = courses.filter(c => c.semester === selectedSemester);
+    }
+
+    if (sortOrder !== 'default') {
+      return [...filtered].sort((a, b) => {
+        if (sortOrder === 'desc') return b.nilai - a.nilai;
+        return a.nilai - b.nilai;
       });
     }
 
-    if (sortOrder === 'default') return filtered;
-    return [...filtered].sort((a, b) => {
-      if (sortOrder === 'desc') return b.nilai - a.nilai;
-      return a.nilai - b.nilai;
-    });
-  }, [sortOrder, selectedSemester]);
+    if (sortSKS !== 'default') {
+      return [...filtered].sort((a, b) => {
+        if (sortSKS === 'desc') return b.sks - a.sks;
+        return a.sks - b.sks;
+      });
+    }
+
+    return filtered;
+  }, [sortOrder, sortSKS, selectedSemester]);
 
   const toggleSort = () => {
+    setSortSKS('default');
     if (sortOrder === 'default') setSortOrder('desc');
     else if (sortOrder === 'desc') setSortOrder('asc');
     else setSortOrder('default');
+  };
+
+  const toggleSortSKS = () => {
+    setSortOrder('default');
+    if (sortSKS === 'default') setSortSKS('desc');
+    else if (sortSKS === 'desc') setSortSKS('asc');
+    else setSortSKS('default');
   };
 
   return (
@@ -157,14 +170,14 @@ export function TranscriptTable() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-yellow-100 border border-yellow-300 rounded"></div>
-            <span className="text-sm text-gray-700 font-medium">Mata Kuliah Inti</span>
+            <span className="text-sm text-gray-700 font-medium">Prasyarat</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
-            <span className="text-sm text-gray-700 font-medium">Nilai Mengulang</span>
+            <span className="text-sm text-gray-700 font-medium">Ujian Khusus</span>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-[10px]">
           <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
             <div className="px-3 py-1 text-sm font-medium text-gray-500">
               Semester
@@ -179,36 +192,47 @@ export function TranscriptTable() {
               </button>
             ))}
           </div>
-          <button
-            onClick={toggleSort}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors h-10"
-          >
-            <ArrowUpDown size={16} />
-            {sortOrder === 'default' ? 'Urutkan Nilai' : sortOrder === 'desc' ? 'Nilai Tertinggi' : 'Nilai Terendah'}
-          </button>
         </div>
       </div>
       <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm bg-white">
         <table className="w-full text-left border-collapse table-fixed min-w-[800px] font-serif">
           <thead>
             <tr className="bg-gray-100 text-gray-800 border-b border-gray-200 font-sans">
-              <th className="py-4 px-4 font-semibold w-16 text-center">No.</th>
               <th className="py-4 px-4 font-semibold w-auto">Mata Kuliah</th>
-              <th className="py-4 px-4 font-semibold w-20 text-center">SKS</th>
+              <th className="py-4 px-4 font-semibold w-20 text-center cursor-pointer hover:text-blue-600 transition-colors" onClick={toggleSortSKS}>
+                <div className="flex items-center justify-center gap-1">
+                  SKS
+                  <ArrowUpDown size={14} className={sortSKS !== 'default' ? 'opacity-100 text-blue-600' : 'opacity-50'} />
+                </div>
+              </th>
+              <th className="py-4 px-4 font-semibold w-16 text-center">Teori</th>
+              <th className="py-4 px-4 font-semibold w-20 text-center">Praktik</th>
               <th className="py-4 px-4 font-semibold w-24 text-center cursor-pointer hover:text-blue-600 transition-colors" onClick={toggleSort}>
                 <div className="flex items-center justify-center gap-1">
                   Nilai
-                  <ArrowUpDown size={14} className="opacity-50" />
+                  <ArrowUpDown size={14} className={sortOrder !== 'default' ? 'opacity-100 text-blue-600' : 'opacity-50'} />
                 </div>
               </th>
               <th className="py-4 px-4 font-semibold w-24 text-center">Bobot</th>
-              <th className="py-4 px-4 font-semibold text-center w-36">Bintang</th>
+              <th className="py-4 px-4 font-semibold text-center w-36">
+                <div className="flex items-center justify-center gap-1">
+                  {[...Array(4)].map((_, i) => (
+                    <Star key={i} size={16} className="text-gray-300 fill-current" />
+                  ))}
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
             {sortedCourses.map((course, index) => {
               const isHighlighted = highlightedCourses.includes(course.mataKuliah);
               const isRepeated = repeatedCourses.includes(course.mataKuliah);
+              
+              const isKerjaPraktik = course.mataKuliah.includes('Kerja Praktik') || course.mataKuliah.includes('Skripsi') || course.mataKuliah.includes('Laporan Akhir');
+              const hasPraktikum = course.mataKuliah.includes('+ Praktikum');
+              const praktik = isKerjaPraktik ? course.sks : (hasPraktikum ? 1 : 0);
+              const teori = course.sks - praktik;
+
               return (
                 <tr 
                   key={index} 
@@ -222,11 +246,10 @@ export function TranscriptTable() {
                         : 'hover:bg-gray-50'
                   }`}
                 >
-                  <td className="py-3 px-4 text-center text-gray-600">
-                    {sortOrder === 'default' ? index + 1 : courses.findIndex(c => c === course) + 1}
-                  </td>
                   <td className={`py-3 px-4 ${(isHighlighted || isRepeated) ? 'text-gray-900 font-medium truncate' : 'text-gray-800 truncate'}`}>{course.mataKuliah}</td>
                   <td className="py-3 px-4 text-center text-gray-600">{course.sks}</td>
+                  <td className="py-3 px-4 text-center text-gray-600">{teori}</td>
+                  <td className="py-3 px-4 text-center text-gray-600">{praktik}</td>
                   <td className="py-3 px-4 text-center text-gray-800 font-medium">
                     {getLetterGrade(course.nilai)}
                   </td>

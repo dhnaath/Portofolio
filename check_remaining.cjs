@@ -1,0 +1,65 @@
+const existingCourses = [
+  { mataKuliah: "Kerja Praktik 1", sks: 12, nilai: 3.0 },
+  { mataKuliah: "Kerja Praktik 2", sks: 12, nilai: 3.5 },
+  { mataKuliah: "Laporan Akhir", sks: 6, nilai: 4.0 },
+  { mataKuliah: "Skripsi", sks: 6, nilai: 3.5 },
+  { mataKuliah: "Manajemen Distribusi + Praktikum", sks: 3, nilai: 3.5 },
+  { mataKuliah: "Manajemen Pergudangan + Praktikum", sks: 3, nilai: 3.5 },
+  { mataKuliah: "Manajemen Persediaan + Praktikum", sks: 3, nilai: 4.0 },
+  { mataKuliah: "Sistem dan Manajemen Transportasi + Praktikum", sks: 3, nilai: 2.0 },
+  { mataKuliah: "Riset Operasi + Praktikum", sks: 3, nilai: 2.0 },
+  { mataKuliah: "Pengendalian Kualitas + Praktikum", sks: 3, nilai: 3.0 },
+  { mataKuliah: "Manajemen Freight + Praktikum", sks: 3, nilai: 2.0 },
+  { mataKuliah: "Barang-Barang Berbahaya + Praktikum", sks: 3, nilai: 4.0 },
+  { mataKuliah: "Ekspor Impor + Praktikum", sks: 3, nilai: 3.0 },
+  { mataKuliah: "Analisis Keputusan + Praktikum", sks: 3, nilai: 3.0 },
+  { mataKuliah: "Aplikasi Dasar SAP (ERP) + Praktikum", sks: 3, nilai: 4.0 },
+  { mataKuliah: "Manajemen Proyek + Praktikum", sks: 3, nilai: 2.0 },
+  { mataKuliah: "Pemodelan dan Simulasi Logistik & Rantai Pasok + Praktikum", sks: 3, nilai: 3.0 },
+  { mataKuliah: "Pengantar Logistik", sks: 2, nilai: 2.0 },
+  { mataKuliah: "Pengantar Manajemen", sks: 2, nilai: 4.0 },
+  { mataKuliah: "Literasi Teknologi 1 + Praktikum", sks: 2, nilai: 4.0 },
+  { mataKuliah: "Matematika Bisnis + Praktikum", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Pengantar Ekonomi", sks: 2, nilai: 4.0 },
+  { mataKuliah: "Pendidikan Agama", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Pendidikan Pancasila", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Bahasa Indonesia", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Bahasa Inggris 1 + Praktikum", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Manajemen Pembelian + Praktikum", sks: 2, nilai: 4.0 },
+  { mataKuliah: "Pengantar SCM", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Manajemen SDM", sks: 2, nilai: 4.0 },
+  { mataKuliah: "Literasi Teknologi 2 + Praktikum", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Statistika Bisnis + Praktikum", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Proyek 1", sks: 2, nilai: 4.0 },
+  { mataKuliah: "Pengantar Akuntansi & Perpajakan + Praktikum", sks: 2, nilai: 4.0 },
+  { mataKuliah: "PKN", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Bahasa Inggris 2 + Praktikum", sks: 2, nilai: 3.0 },
+  { mataKuliah: "SIM Logistik + Praktikum", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Proyek 2", sks: 2, nilai: 4.0 },
+  { mataKuliah: "Bahasa Inggris 3", sks: 2, nilai: 2.0 },
+  { mataKuliah: "Global & Marketing Logistics", sks: 2, nilai: 4.0 },
+  { mataKuliah: "Kemasan Pelindung & Penanganan Material + Praktikum", sks: 2, nilai: 2.5 },
+  { mataKuliah: "Bahasa Inggris 4 + Praktikum", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Etika Profesi", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Kepabeanan + Praktikum", sks: 2, nilai: 4.0 },
+  { mataKuliah: "Proyek 3", sks: 2, nilai: 4.0 },
+  { mataKuliah: "Akuntansi Biaya Logistik + Praktikum", sks: 2, nilai: 3.5 },
+  { mataKuliah: "Asuransi + Praktikum", sks: 2, nilai: 2.5 },
+  { mataKuliah: "Proses Bisnis Logistik", sks: 2, nilai: 3.0 },
+  { mataKuliah: "E-Commerce + Praktikum", sks: 2, nilai: 3.5 },
+  { mataKuliah: "Pelayanan Pelanggan", sks: 2, nilai: 2.5 },
+  { mataKuliah: "Kewirausahaan", sks: 2, nilai: 4.0 },
+  { mataKuliah: "Kapita Selekta", sks: 2, nilai: 3.5 },
+  { mataKuliah: "Metode Penelitian", sks: 2, nilai: 4.0 },
+  { mataKuliah: "Hukum Kontrak dan Agen", sks: 2, nilai: 3.0 },
+  { mataKuliah: "Logistik Halal", sks: 2, nilai: 3.0 }
+];
+
+const fs = require('fs');
+const newCoursesText = fs.readFileSync('new_courses.txt', 'utf-8');
+
+const used = existingCourses.filter(c => newCoursesText.includes(c.mataKuliah));
+const missing = existingCourses.filter(c => !newCoursesText.includes(c.mataKuliah));
+
+console.log(JSON.stringify(missing, null, 2));
+

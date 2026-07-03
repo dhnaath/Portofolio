@@ -1,0 +1,103 @@
+import React, { useState, useEffect } from 'react';
+import HTMLFlipBook from 'react-pageflip';
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+
+// Set up the PDF.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
+const FlipBook = HTMLFlipBook as any;
+export function CVFlipbook({ pdfUrl = "https://raw.githubusercontent.com/dhnaath/Website-Portofolio/main/CV%20-%20DHIA%20NAJMI%20ATHALLAH.pdf", title = "Interactive Document" }: { pdfUrl?: string, title?: string }) {
+  const [numPages, setNumPages] = useState<number | null>(null);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    setNumPages(numPages);
+  }
+
+  // Calculate width based on screen size to make it responsive
+  const getPageWidth = () => {
+    if (windowWidth < 640) return 750; // Mobile
+    if (windowWidth < 1024) return 1125; // Tablet
+    return 1350; // Desktop
+  };
+
+  const getPageHeight = () => {
+    if (windowWidth < 640) return 1060; // Mobile
+    if (windowWidth < 1024) return 1590; // Tablet
+    return 1908; // Desktop
+  };
+
+  const pageWidth = getPageWidth();
+  const pageHeight = getPageHeight();
+
+  return (
+    <div className="w-full bg-white/50 p-4 sm:p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center relative overflow-hidden">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-8 z-10 font-cambria">{title}</h2>
+      
+      <div className="w-full flex justify-center pb-8 z-10">
+        <Document
+          file={pdfUrl}
+          onLoadSuccess={onDocumentLoadSuccess}
+          loading={<div className="text-gray-500 py-20">Loading PDF Document...</div>}
+          error={<div className="text-red-500 py-20 text-center">Failed to load PDF.<br/>The file might be unavailable or restricted by CORS.</div>}
+        >
+          {numPages && (
+            <FlipBook
+              width={pageWidth}
+              height={pageHeight}
+              size="stretch"
+              minWidth={300}
+              maxWidth={1350}
+              minHeight={424}
+              maxHeight={1908}
+              maxShadowOpacity={0.4}
+              showCover={true}
+              mobileScrollSupport={true}
+              className="cv-flipbook drop-shadow-2xl"
+              style={{ margin: "0 auto" }}
+            >
+              {/* Render pages dynamically based on numPages */}
+              {Array.from(new Array(numPages), (el, index) => (
+                <div key={`page_${index + 1}`} className="page bg-white shadow-sm overflow-hidden flex items-center justify-center">
+                  <Page 
+                    pageNumber={index + 1} 
+                    width={pageWidth} 
+                    renderTextLayer={false} 
+                    renderAnnotationLayer={false} 
+                    className="flex justify-center items-center h-full w-full"
+                  />
+                </div>
+              ))}
+              
+              {/* Back Cover */}
+              <div className="page bg-white border border-gray-300 shadow-sm flex flex-col items-center justify-center p-8">
+                <h3 className="text-2xl font-bold text-gray-400 mb-2">End of Document</h3>
+                <p className="text-gray-400 text-sm mb-8 text-center">Please continue scrolling to view detailed projects below.</p>
+                <a 
+                  href={pdfUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors shadow-md"
+                >
+                  Download Original PDF
+                </a>
+              </div>
+            </FlipBook>
+          )}
+        </Document>
+      </div>
+      
+      <p className="text-sm text-gray-500 mt-4 text-center">
+        Tip: Click on the corners or drag to turn the pages, just like a real book.
+      </p>
+    </div>
+  );
+}

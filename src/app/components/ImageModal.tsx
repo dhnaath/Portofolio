@@ -15,7 +15,7 @@ export function ImageModal({ src, alt, onClose }: ImageModalProps) {
       <div className="relative max-w-6xl w-full max-h-full flex items-center justify-center">
         <button
           onClick={onClose}
-          className="absolute -top-12 right-0 md:top-4 md:right-4 text-white hover:text-gray-300 p-2 z-50 bg-black/50 rounded-full transition-colors"
+          className="absolute -top-12 right-0 md:top-4 md:right-4 text-[#FFFFFF] hover:text-[#F4F3F0] p-2 z-50 bg-black/50 rounded-full transition-colors"
           aria-label="Close modal"
         >
           <X size={24} />

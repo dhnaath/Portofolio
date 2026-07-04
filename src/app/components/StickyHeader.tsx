@@ -37,29 +37,29 @@ export function StickyHeader() {
   };
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-[#F9F8F5]/95 backdrop-blur-sm border-b border-gray-200 text-gray-900 shadow-sm transition-all duration-300 animate-in slide-in-from-top-full">
+    <header className="fixed top-0 w-full z-50 bg-[#F4F3F0]/95 backdrop-blur-sm border-b border-[#5B6572]/30 text-[#222222] shadow-sm transition-all duration-300 animate-in slide-in-from-top-full">
       <nav className="w-full px-[10pt] py-8 max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-around gap-6 md:gap-0">
           <button
             onClick={() => scrollToSection("experience")}
             className={getButtonClass("experience")}
           >
-            <span className="text-xl md:text-2xl font-bold text-gray-900">Working Experiences</span>
-            <span className="text-sm font-cambria max-w-[320px] text-center hidden md:block text-gray-800">Professional Journey, Career Path,<br />and Strategic Contributions</span>
+            <span className="text-xl md:text-2xl font-bold text-[#222222]">Working Experiences</span>
+            <span className="text-sm font-cambria max-w-[320px] text-center hidden md:block text-[#222222]">Professional Journey, Career Path,<br />and Strategic Contributions</span>
           </button>
           <button
             onClick={() => scrollToSection("akademik")}
             className={getButtonClass("akademik")}
           >
-            <span className="text-xl md:text-2xl font-bold text-gray-900">Academic Logbook</span>
-            <span className="text-sm font-cambria max-w-[320px] text-center hidden md:block text-gray-800">Thesis, Publications, Research Planning,<br />Projects, Seminars, and Transcripts</span>
+            <span className="text-xl md:text-2xl font-bold text-[#222222]">Academic Logbook</span>
+            <span className="text-sm font-cambria max-w-[320px] text-center hidden md:block text-[#222222]">Thesis, Publications, Research Planning,<br />Projects, Seminars, and Transcripts</span>
           </button>
           <button
             onClick={() => scrollToSection("proyek")}
             className={getButtonClass("proyek")}
           >
-            <span className="text-xl md:text-2xl font-bold text-gray-900">Profile Qualifications</span>
-            <span className="text-sm font-cambria max-w-[320px] text-center hidden md:block text-gray-800">Certifications, Licenses, Memberships, Competencies, Skills, and Achievements.</span>
+            <span className="text-xl md:text-2xl font-bold text-[#222222]">Profile Qualifications</span>
+            <span className="text-sm font-cambria max-w-[320px] text-center hidden md:block text-[#222222]">Certifications, Licenses, Memberships, Competencies, Skills, and Achievements.</span>
           </button>
         </div>
       </nav>

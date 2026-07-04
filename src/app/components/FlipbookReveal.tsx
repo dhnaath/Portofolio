@@ -15,7 +15,7 @@ export function FlipbookReveal({ children }: { children: React.ReactNode }) {
         >
           <div className="text-center">
             {!revealed && (
-              <p className="text-gray-500 mb-6 text-sm uppercase tracking-widest font-medium">Click to reveal</p>
+              <p className="text-[#5B6572] mb-6 text-sm uppercase tracking-widest font-medium">Click to reveal</p>
             )}
             <motion.div
               className="relative w-72 h-44 md:w-44 md:h-96 cursor-pointer mx-auto"
@@ -32,17 +32,17 @@ export function FlipbookReveal({ children }: { children: React.ReactNode }) {
             >
                 {/* Front of Card */}
                 <div 
-                  className="absolute inset-0 rounded-lg shadow-2xl flex md:flex-col items-center justify-center border-2 border-[#c29661] gap-6"
-                  style={{ backgroundColor: '#D4A373', backfaceVisibility: 'hidden', backgroundImage: 'radial-gradient(circle at center, #D4A373 0%, #C4905D 100%)' }}
+                  className="absolute inset-0 rounded-lg shadow-2xl flex md:flex-col items-center justify-center border-2 border-[#5B6572] gap-6"
+                  style={{ backgroundColor: '#102A43', backfaceVisibility: 'hidden', backgroundImage: 'radial-gradient(circle at center, #102A43 0%, #0a1f33 100%)' }}
                 >
                   {/* Desktop Vertical SVG */}
-                  <svg width="44" height="180" viewBox="0 0 44 180" className="hidden md:block text-gray-900 fill-transparent stroke-current stroke-[4] stroke-linejoin-round">
+                  <svg width="44" height="180" viewBox="0 0 44 180" className="hidden md:block text-[#222222] fill-transparent stroke-current stroke-[4] stroke-linejoin-round">
                     <circle cx="22" cy="30" r="16" />
                     <polygon points="22,74 38,106 6,106" />
                     <rect x="7" y="134" width="30" height="30" />
                   </svg>
                   {/* Mobile Horizontal SVG */}
-                  <svg width="130" height="44" viewBox="0 0 130 44" className="md:hidden text-gray-900 fill-transparent stroke-current stroke-[4] stroke-linejoin-round">
+                  <svg width="130" height="44" viewBox="0 0 130 44" className="md:hidden text-[#222222] fill-transparent stroke-current stroke-[4] stroke-linejoin-round">
                     <circle cx="22" cy="22" r="16" />
                     <polygon points="65,6 81,38 49,38" />
                     <rect x="94" y="6" width="30" height="30" />
@@ -51,11 +51,11 @@ export function FlipbookReveal({ children }: { children: React.ReactNode }) {
                 
                 {/* Back of Card */}
                 <div 
-                  className="absolute inset-0 rounded-lg shadow-2xl flex flex-col items-center justify-center border-2 border-[#c29661] p-4 text-center"
-                  style={{ backgroundColor: '#D4A373', transform: 'rotateY(180deg)', backfaceVisibility: 'hidden', backgroundImage: 'radial-gradient(circle at center, #D4A373 0%, #C4905D 100%)' }}
+                  className="absolute inset-0 rounded-lg shadow-2xl flex flex-col items-center justify-center border-2 border-[#5B6572] p-4 text-center"
+                  style={{ backgroundColor: '#102A43', transform: 'rotateY(180deg)', backfaceVisibility: 'hidden', backgroundImage: 'radial-gradient(circle at center, #102A43 0%, #0a1f33 100%)' }}
                 >
-                   <div className="text-gray-900 font-mono font-bold text-2xl md:text-3xl tracking-[0.3em] opacity-80 mb-2 md:mb-6 md:rotate-90">001</div>
-                   <div className="text-gray-900 text-sm font-semibold tracking-widest opacity-70 md:rotate-90 md:mt-12 md:whitespace-nowrap">CONFIDENTIAL</div>
+                   <div className="text-[#222222] font-mono font-bold text-2xl md:text-3xl tracking-[0.3em] opacity-80 mb-2 md:mb-6 md:rotate-90">001</div>
+                   <div className="text-[#222222] text-sm font-semibold tracking-widest opacity-70 md:rotate-90 md:mt-12 md:whitespace-nowrap">CONFIDENTIAL</div>
                 </div>
             </motion.div>
           </div>

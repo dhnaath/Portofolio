@@ -4,7 +4,7 @@ import { Hero } from "./components/Hero";
 import { StickyHeader } from "./components/StickyHeader";
 import { motion } from "motion/react";
 
-function FlipbookCard({ category, title, content, darkContent }: { category: string, title: string, content: React.ReactNode, darkContent?: React.ReactNode }) {
+function FlipbookCard({ category, title, content, darkContent, link }: { category: string, title: string, content: React.ReactNode, darkContent?: React.ReactNode, link?: string }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [phase, setPhase] = useState<'idle' | 'spill' | 'text' | 'revert'>('idle');
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -102,7 +102,7 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
       >
         {/* Front Face (Cover) */}
         <div 
-          className="absolute w-full h-full bg-white rounded-[2rem] border-2 border-gray-100 transition-shadow duration-300 p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] overflow-hidden"
+          className="absolute w-full h-full bg-[#FFFFFF] rounded-[2rem] border-2 border-[#5B6572]/20 transition-shadow duration-300 p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] overflow-hidden"
           style={{
             boxShadow: isHovered && !isFlipped
               ? `${-mousePos.x * 40}px ${-mousePos.y * 40}px 40px rgba(0,0,0,0.15)`
@@ -111,7 +111,7 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
         >
           {/* Sliding Background Element */}
           <motion.div 
-            className="absolute inset-0 bg-gray-900 z-10"
+            className="absolute inset-0 bg-[#222222] z-10"
             initial={false}
             animate={{ 
               x: phase === 'spill' || phase === 'text' ? '0%' : (phase === 'revert' ? getRevertPosition().x : getInitialPosition().x),
@@ -124,7 +124,7 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
 
           {/* Hidden Short Paragraph */}
           <motion.div 
-            className="absolute z-20 text-white p-8 text-center flex flex-col justify-center items-center"
+            className="absolute z-20 text-[#FFFFFF] p-8 text-center flex flex-col justify-center items-center"
             initial={false}
             animate={{ 
               opacity: phase === 'text' ? 1 : 0,
@@ -140,7 +140,7 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
           </motion.div>
 
           <motion.div 
-            className="relative z-20 text-sm font-semibold text-gray-400 uppercase tracking-widest mb-4 font-sans origin-center"
+            className="relative z-20 text-sm font-semibold text-[#5B6572]/70 uppercase tracking-widest mb-4 font-sans origin-center"
             animate={
               phase === 'spill' || phase === 'text' ? {
                 scale: 0.95,
@@ -169,7 +169,7 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
             {category}
           </motion.div>
           <motion.div 
-            className="relative z-20 text-3xl font-bold text-gray-900 leading-tight mb-8 mt-[15pt] font-serif origin-center"
+            className="relative z-20 text-3xl font-bold text-[#222222] leading-tight mb-8 mt-[15pt] font-serif origin-center"
             animate={
               phase === 'spill' || phase === 'text' ? {
                 scale: 0.95,
@@ -200,11 +200,25 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
         </div>
 
         {/* Back Face (Inside Page) */}
-        <div className="absolute w-full h-full bg-gray-900 rounded-[2rem] border border-gray-800 shadow-lg p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-6 pb-4 border-b border-gray-800 w-full font-sans italic">{title}</div>
-          <div className="text-lg md:text-xl font-medium text-white leading-snug font-cambria">
+        <div className="absolute w-full h-full bg-[#222222] rounded-[2rem] border border-[#222222] shadow-lg p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <div className="text-sm font-semibold text-[#5B6572]/70 uppercase tracking-wider mb-6 pb-4 border-b border-[#222222] w-full font-sans italic">{title}</div>
+          <div className="text-lg md:text-xl font-medium text-[#FFFFFF] leading-snug font-cambria">
             {content}
           </div>
+          <a
+            href={link || "#"}
+            target={link ? "_blank" : undefined}
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!link) {
+                e.preventDefault();
+              }
+            }}
+            className="absolute bottom-8 right-8 text-[#5B6572] hover:text-[#FFFFFF] transition-colors z-30"
+          >
+            <ExternalLink size={24} />
+          </a>
         </div>
       </div>
     </motion.div>
@@ -222,7 +236,7 @@ import { CVFlipbook } from "./components/CVFlipbook";
 import { FlipbookReveal } from "./components/FlipbookReveal";
 import { FloatingMetaButton } from "./components/FloatingMetaButton";
 import { FloatingDocuments } from "./components/FloatingDocuments";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 
 function App() {
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
@@ -415,7 +429,7 @@ function App() {
     },
     // 6. Grab Teknologi Indonesia
     {
-      title: "Online Driver",
+      title: "Driver & Courier",
       company: (
         <>
           Grab Teknologi Indonesia<br />
@@ -427,7 +441,6 @@ function App() {
       period: "Feb 2026 s.d. Sekarang",
       employmentType: "Mandiri, Tanpa Jam Operasional dan Wilayah Tetap (Freelancer)",
       description: "Transportasi; Jasa Layanan; Kurir-Ojek; Pesan-Antar; Aplikasi",
-      companyLogo: "https://logo.clearbit.com/grab.com",
       achievements: [
         "Melayani transportasi penumpang serta distribusi makanan dan paket barang dengan memastikan keamanan, kebersihan, dan ketepatan waktu hingga ke lokasi tujuan.",
         "Berkoordinasi secara aktif dengan pelanggan, mitra restoran, dan pihak keamanan/parkir demi kelancaran proses ambil-antar pesanan.",
@@ -435,6 +448,11 @@ function App() {
         "Mematuhi standar operasional dengan menggunakan atribut resmi serta merawat kondisi kendaraan secara rutin guna meminimalisir kendala teknis di jalan."
       ],
       image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+      images: [
+        "https://play-lh.googleusercontent.com/OmBwUGuTJxaV0gW04sQjvGaxlgxHr83z88dQCD0gJy7_dX9gM2APUE6CmyWFT27kb1-ASDQq5iZlNnkfwsjgdQ=w480-h960-rw",
+        "https://play-lh.googleusercontent.com/gvn6nri4v_KAjbR2KW_iWmbGUmrJYiP-QRVAmpCUmFHvza2gqw2MI6qS9U7o3J_XZM8UKlm4aKjaOEddJKDO3w=w480-h960-rw",
+        "https://play-lh.googleusercontent.com/2INhmztKw86TAsrMDdYj_BLMNsvIBv968VPsNpFSIEjB2E2vRu0r-Z-E9PDjBNukKBgmmp2xxfs6tYBIInkNBQ=w480-h960-rw"
+      ],
     },
     // 7. Mandiri Utama Finance
     {
@@ -502,12 +520,12 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F9F8F5] font-sans">
+    <div className="min-h-screen bg-[#F4F3F0] font-sans">
       <StickyHeader />
       <Hero />
 
       {/* Work Experience Section - Reverse Chronological Order (Latest to Earliest) */}
-      <section id="experience" className="py-[25pt] bg-[#F9F8F5]">
+      <section id="experience" className="py-[25pt] bg-[#F4F3F0]">
         <div className="w-full px-[10pt]">
           
           <div className="relative w-full overflow-hidden flex py-8">
@@ -561,8 +579,61 @@ function App() {
         </div>
       </section>
 
+
+      {/* Proyek Section */}
+      <section id="proyek" className="py-[25pt] bg-[#F4F3F0]">
+        <div className="w-full px-[10pt]">
+          <div id="documentation" className="relative">
+            <div className="flex items-center justify-center gap-4 max-w-7xl mx-auto">
+              <button
+                onClick={() => setDocPage((prev) => Math.max(0, prev - 1))}
+                disabled={docPage === 0}
+                className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] disabled:opacity-50 disabled:cursor-not-allowed hidden md:flex shrink-0"
+                aria-label="Previous page"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
+                {documentation.slice(docPage * 3, docPage * 3 + 3).map((doc, index) => (
+                  <DocumentationCard key={index} {...doc} />
+                ))}
+              </div>
+
+              <button
+                onClick={() => setDocPage((prev) => Math.min(Math.ceil(documentation.length / 3) - 1, prev + 1))}
+                disabled={docPage >= Math.ceil(documentation.length / 3) - 1 || documentation.length === 0}
+                className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] disabled:opacity-50 disabled:cursor-not-allowed hidden md:flex shrink-0"
+                aria-label="Next page"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
+            
+            <div className="flex justify-center items-center gap-4 mt-8 md:hidden">
+              <button
+                onClick={() => setDocPage((prev) => Math.max(0, prev - 1))}
+                disabled={docPage === 0}
+                className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                aria-label="Previous page"
+              >
+                <ChevronLeft size={24} />
+              </button>
+
+              <button
+                onClick={() => setDocPage((prev) => Math.min(Math.ceil(documentation.length / 3) - 1, prev + 1))}
+                disabled={docPage >= Math.ceil(documentation.length / 3) - 1 || documentation.length === 0}
+                className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                aria-label="Next page"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* Academic Logbook Section */}
-      <section id="akademik" className="py-[25pt] bg-[#F9F8F5]">
+      <section id="akademik" className="py-[25pt] bg-[#F4F3F0]">
         <div className="w-full px-[10pt]">
           
           <div className="relative w-full overflow-hidden flex py-8 mb-12">
@@ -636,66 +707,11 @@ function App() {
           </div>
 
           <div id="transcript" className="text-center mb-12">
-            <h3 className="text-3xl mb-4 text-gray-900 font-serif">Sarjana Terapan Logistik (S.Tr.Log.)</h3>
+            <h3 className="text-3xl mb-4 text-[#222222] font-serif">Sarjana Terapan Logistik (S.Tr.Log.)</h3>
           </div>
           <TranscriptTable />
         </div>
       </section>
-
-      {/* Proyek Section */}
-      <section id="proyek" className="py-[25pt] bg-[#F9F8F5]">
-        <div className="w-full px-[10pt]">
-
-          <div id="documentation" className="relative">
-            <div className="flex items-center justify-center gap-4 max-w-7xl mx-auto">
-              <button
-                onClick={() => setDocPage((prev) => Math.max(0, prev - 1))}
-                disabled={docPage === 0}
-                className="p-2 rounded-full bg-white shadow-md text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hidden md:flex shrink-0"
-                aria-label="Previous page"
-              >
-                <ChevronLeft size={24} />
-              </button>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
-                {documentation.slice(docPage * 3, docPage * 3 + 3).map((doc, index) => (
-                  <DocumentationCard key={index} {...doc} />
-                ))}
-              </div>
-
-              <button
-                onClick={() => setDocPage((prev) => Math.min(Math.ceil(documentation.length / 3) - 1, prev + 1))}
-                disabled={docPage >= Math.ceil(documentation.length / 3) - 1 || documentation.length === 0}
-                className="p-2 rounded-full bg-white shadow-md text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hidden md:flex shrink-0"
-                aria-label="Next page"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
-            
-            <div className="flex justify-center items-center gap-4 mt-8 md:hidden">
-              <button
-                onClick={() => setDocPage((prev) => Math.max(0, prev - 1))}
-                disabled={docPage === 0}
-                className="p-2 rounded-full bg-white shadow-md text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-                aria-label="Previous page"
-              >
-                <ChevronLeft size={24} />
-              </button>
-              <button
-                onClick={() => setDocPage((prev) => Math.min(Math.ceil(documentation.length / 3) - 1, prev + 1))}
-                disabled={docPage >= Math.ceil(documentation.length / 3) - 1 || documentation.length === 0}
-                className="p-2 rounded-full bg-white shadow-md text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-                aria-label="Next page"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
 
       <Footer />
       <FloatingDocuments />

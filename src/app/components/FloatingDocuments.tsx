@@ -1,15 +1,17 @@
-import { FileText } from "lucide-react";
+import { FileText, ExternalLink } from "lucide-react";
 import { motion } from "motion/react";
 import { useState, useRef, useEffect } from "react";
 
 function FloatingDocumentCard({ 
   title, 
   pdfUrl,
-  handleHeight = "180px"
+  handleHeight = "180px",
+  icon
 }: { 
   title: string, 
   pdfUrl?: string,
-  handleHeight?: string
+  handleHeight?: string,
+  icon?: React.ReactNode
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -68,30 +70,30 @@ function FloatingDocumentCard({
           >
             {/* Front of Card (White) */}
             <div 
-              className="absolute inset-0 rounded-lg shadow-2xl flex items-center justify-center border border-gray-800 bg-gray-900"
+              className="absolute inset-0 rounded-lg shadow-2xl flex items-center justify-center border border-[#222222] bg-[#222222]"
               style={{ backfaceVisibility: 'hidden' }}
             >
               <div className="flex flex-col items-center gap-6">
-                <FileText size={72} className="text-gray-400" />
-                <span className="text-white font-semibold tracking-wider text-xl">{title}</span>
+                {icon ? icon : <FileText size={72} className="text-[#5B6572]/70" />}
+                <span className="text-[#FFFFFF] font-semibold tracking-wider text-xl italic">{title}</span>
               </div>
             </div>
             
             {/* Back of Card (Click to open) */}
             <div 
-              className="absolute inset-0 rounded-lg shadow-2xl flex flex-col items-center justify-center border border-gray-800 bg-gray-900 p-4 text-center"
+              className="absolute inset-0 rounded-lg shadow-2xl flex flex-col items-center justify-center border border-[#222222] bg-[#222222] p-4 text-center"
               style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
             >
-               <div className="text-white font-bold text-3xl mb-6">View Document</div>
-               <div className="text-gray-300 text-lg font-semibold uppercase tracking-widest px-6 py-3 border border-gray-700 rounded-full hover:bg-gray-800 transition-colors">
-                 Click to open
+               <div className="flex items-center gap-2 text-[#F4F3F0] text-lg font-semibold uppercase tracking-widest px-6 py-3 border border-[#5B6572] rounded-full hover:bg-[#222222] transition-colors">
+                 <span>Click to open</span>
+                 <ExternalLink size={20} />
                </div>
             </div>
           </motion.div>
 
           {/* The handle (visible when collapsed) */}
           <motion.div 
-            className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer border border-gray-800 border-l-0 shadow-[4px_0_15px_rgba(0,0,0,0.5)] z-20 origin-left bg-gray-900"
+            className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer border border-[#222222] border-l-0 shadow-[4px_0_15px_rgba(0,0,0,0.5)] z-20 origin-left bg-[#222222]"
             style={{
               borderTopRightRadius: "45px",
               borderBottomRightRadius: "45px",
@@ -105,7 +107,7 @@ function FloatingDocumentCard({
             transition={{ duration: 0.2 }}
           >
             <div 
-              className="text-white font-semibold text-lg tracking-widest whitespace-nowrap"
+              className="text-[#FFFFFF] font-semibold text-lg tracking-widest whitespace-nowrap italic"
               style={{
                 writingMode: "vertical-rl",
                 transform: "rotate(180deg)"
@@ -126,11 +128,15 @@ export function FloatingDocuments() {
       <div className="translate-y-[37pt]">
         <FloatingDocumentCard 
           title="Curriculum Vitae" 
+          pdfUrl="#"
           handleHeight="calc(180px + 27.5pt)"
+          icon={<img src="https://github.com/dhnaath/Resources-Portofolio/blob/main/cv_1810684.png?raw=true" alt="CV Icon" className="w-[126px] h-[126px] object-contain" />}
         />
       </div>
       <FloatingDocumentCard 
         title="Cover Letter" 
+        pdfUrl="#"
+        icon={<img src="https://github.com/dhnaath/Resources-Portofolio/blob/main/envelope_5744290.png?raw=true" alt="Cover Letter Icon" className="w-[126px] h-[126px] object-contain" />}
       />
     </div>
   );

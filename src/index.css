@@ -5,4 +5,10 @@
   --font-serif: "Times New Roman", Times, serif;
   --font-cambria: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   --font-mono: "Times New Roman", Times, serif;
+
+  --color-alabaster: #F4F3F0;
+  --color-prussian: #102A43;
+  --color-charcoal: #222222;
+  --color-slate: #5B6572;
+  --color-white: #FFFFFF;
 }

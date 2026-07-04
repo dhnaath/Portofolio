@@ -1,7 +1,6 @@
 import { FileText } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { useState, useRef, useEffect } from "react";
-import { CVFlipbook } from "./CVFlipbook";
 
 function FloatingDocumentCard({ 
   title, 
@@ -14,13 +13,10 @@ function FloatingDocumentCard({
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      // Don't close if modal is open
-      if (isModalOpen) return;
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsExpanded(false);
         setTimeout(() => setIsFlipped(false), 300);
@@ -28,7 +24,7 @@ function FloatingDocumentCard({
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isModalOpen]);
+  }, []);
 
   return (
     <>
@@ -62,28 +58,32 @@ function FloatingDocumentCard({
             onClick={() => {
               if (isExpanded) {
                 if (!isFlipped) setIsFlipped(true);
-                else setIsModalOpen(true);
+                else {
+                  if (pdfUrl) {
+                    window.open(pdfUrl, '_blank');
+                  }
+                }
               }
             }}
           >
             {/* Front of Card (White) */}
             <div 
-              className="absolute inset-0 rounded-lg shadow-2xl flex items-center justify-center border border-gray-200 bg-white"
+              className="absolute inset-0 rounded-lg shadow-2xl flex items-center justify-center border border-gray-800 bg-gray-900"
               style={{ backfaceVisibility: 'hidden' }}
             >
               <div className="flex flex-col items-center gap-6">
                 <FileText size={72} className="text-gray-400" />
-                <span className="text-gray-800 font-semibold tracking-wider text-xl">{title}</span>
+                <span className="text-white font-semibold tracking-wider text-xl">{title}</span>
               </div>
             </div>
             
             {/* Back of Card (Click to open) */}
             <div 
-              className="absolute inset-0 rounded-lg shadow-2xl flex flex-col items-center justify-center border border-gray-200 bg-white p-4 text-center"
+              className="absolute inset-0 rounded-lg shadow-2xl flex flex-col items-center justify-center border border-gray-800 bg-gray-900 p-4 text-center"
               style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
             >
-               <div className="text-gray-800 font-bold text-3xl mb-6">View Document</div>
-               <div className="text-gray-500 text-lg font-semibold uppercase tracking-widest px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors">
+               <div className="text-white font-bold text-3xl mb-6">View Document</div>
+               <div className="text-gray-300 text-lg font-semibold uppercase tracking-widest px-6 py-3 border border-gray-700 rounded-full hover:bg-gray-800 transition-colors">
                  Click to open
                </div>
             </div>
@@ -91,7 +91,7 @@ function FloatingDocumentCard({
 
           {/* The handle (visible when collapsed) */}
           <motion.div 
-            className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer border border-gray-200 border-l-0 shadow-[4px_0_15px_rgba(0,0,0,0.1)] z-20 origin-left bg-white"
+            className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer border border-gray-800 border-l-0 shadow-[4px_0_15px_rgba(0,0,0,0.5)] z-20 origin-left bg-gray-900"
             style={{
               borderTopRightRadius: "45px",
               borderBottomRightRadius: "45px",
@@ -105,7 +105,7 @@ function FloatingDocumentCard({
             transition={{ duration: 0.2 }}
           >
             <div 
-              className="text-gray-700 font-semibold text-lg tracking-widest whitespace-nowrap"
+              className="text-white font-semibold text-lg tracking-widest whitespace-nowrap"
               style={{
                 writingMode: "vertical-rl",
                 transform: "rotate(180deg)"
@@ -116,34 +116,6 @@ function FloatingDocumentCard({
           </motion.div>
         </motion.div>
       </div>
-
-      <AnimatePresence>
-        {isModalOpen && (
-          <motion.div 
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black/60 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsModalOpen(false)}
-          >
-            <motion.div 
-              className="bg-white rounded-3xl w-full max-w-5xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 shadow-2xl relative"
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button 
-                className="absolute top-4 right-4 z-50 p-2 bg-gray-100 rounded-full hover:bg-gray-200 text-gray-800"
-                onClick={() => setIsModalOpen(false)}
-              >
-                ✕
-              </button>
-              <CVFlipbook title={title} pdfUrl={pdfUrl} />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }
@@ -154,7 +126,6 @@ export function FloatingDocuments() {
       <div className="translate-y-[37pt]">
         <FloatingDocumentCard 
           title="Curriculum Vitae" 
-          pdfUrl="https://raw.githubusercontent.com/dhnaath/Website-Portofolio/main/CV%20-%20DHIA%20NAJMI%20ATHALLAH.pdf" 
           handleHeight="calc(180px + 27.5pt)"
         />
       </div>

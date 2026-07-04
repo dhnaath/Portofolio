@@ -169,7 +169,7 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
             {category}
           </motion.div>
           <motion.div 
-            className="relative z-20 text-3xl font-bold text-gray-900 leading-tight mb-8 font-serif origin-center"
+            className="relative z-20 text-3xl font-bold text-gray-900 leading-tight mb-8 mt-[15pt] font-serif origin-center"
             animate={
               phase === 'spill' || phase === 'text' ? {
                 scale: 0.95,
@@ -200,9 +200,9 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
         </div>
 
         {/* Back Face (Inside Page) */}
-        <div className="absolute w-full h-full bg-[#fdfbf7] rounded-[2rem] border border-gray-200 shadow-lg p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          <div className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-6 pb-4 border-b border-gray-200 w-full font-sans">{title}</div>
-          <div className="text-lg md:text-xl font-medium text-gray-800 leading-snug font-cambria">
+        <div className="absolute w-full h-full bg-gray-900 rounded-[2rem] border border-gray-800 shadow-lg p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-6 pb-4 border-b border-gray-800 w-full font-sans italic">{title}</div>
+          <div className="text-lg md:text-xl font-medium text-white leading-snug font-cambria">
             {content}
           </div>
         </div>
@@ -416,7 +416,13 @@ function App() {
     // 6. Grab Teknologi Indonesia
     {
       title: "Online Driver",
-      company: "Grab Teknologi Indonesia, Shopee Internasional Indonesia, Teknologi Perdana Indonesia - Maxim",
+      company: (
+        <>
+          Grab Teknologi Indonesia<br />
+          Shopee Internasional Indonesia<br />
+          Teknologi Perdana Indonesia
+        </>
+      ),
       location: "Pontianak",
       period: "Feb 2026 s.d. Sekarang",
       employmentType: "Mandiri, Tanpa Jam Operasional dan Wilayah Tetap (Freelancer)",
@@ -581,7 +587,7 @@ function App() {
                       category="Proyek Logistik I"
                       title="Business Process"
                       content="Tugas besar berupa observasi 𝗣𝗿𝗼𝘀𝗲𝘀 𝗕𝗶𝘀𝗻𝗶𝘀 milik perusahaan untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟭 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟮 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-                      darkContent='"Observasi TKBM pada PT. Persero Batam"'
+                      darkContent="Observasi TKBM pada PT. Persero Batam"
                     />
                   </div>
                   <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
@@ -589,7 +595,7 @@ function App() {
                       category="Proyek Logistik II"
                       title="Design Thinking"
                       content="Tugas besar berbentuk 𝗗𝗲𝘀𝗶𝗴𝗻 𝗧𝗵𝗶𝗻𝗸𝗶𝗻𝗴 untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟮 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟯 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-                      darkContent='"Pembungkus Paket dari Pati Singkong"'
+                      darkContent="Pembungkus Paket dari Pati Singkong"
                     />
                   </div>
                   <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
@@ -597,6 +603,7 @@ function App() {
                       category="Proyek Logistik III"
                       title="House of Quality"
                       content="Tugas besar berbentuk 𝗛𝗼𝘂𝘀𝗲 𝗼𝗳 𝗤𝘂𝗮𝗹𝗶𝘁𝘆 (𝗛𝗢𝗤) untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟯 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟱 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
+                      darkContent="HOQ Inovasi Whoosh Pengiriman Barang Same Day Jakarta-Bandung"
                     />
                   </div>
                   <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
@@ -604,7 +611,7 @@ function App() {
                       category="Kerja Praktik II"
                       title="Skripsi"
                       content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟮 dan 𝗦𝗸𝗿𝗶𝗽𝘀𝗶 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟴 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-                      darkContent='"Analisis Kualitas Pelayanan PT. Pos Indonesia (Persero) Cabang KPRK Sintang 78600 untuk Meningkatkan Kepuasan Pelanggan dengan Integrasi ServQual dan IPA"'
+                      darkContent="Analisis Kualitas Pelayanan PT. Pos Indonesia (Persero) Cabang KPRK Sintang 78600 untuk Meningkatkan Kepuasan Pelanggan dengan Integrasi ServQual dan IPA"
                     />
                   </div>
                   <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
@@ -612,15 +619,15 @@ function App() {
                       category="Seminar"
                       title="International Joint Effort Seminar Programme on Logistics and Supply Chain"
                       content="Seminar dan Kompetisi Internasional dengan tema Inovasi pada Logistik dan Supply Chain Management hasil kolaborasi dengan Politeknik Nilai Malaysia"
-                      darkContent='"International Joint Effort Seminar Programme on Logistics and Supply Chain"'
+                      darkContent="Awardee for Favorite Judges"
                     />
                   </div>
                   <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
                     <FlipbookCard 
-                      category="Buku Akademik"
+                      category="Kerja Praktik I"
                       title="Rencana Penelitian"
                       content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟭 dan 𝗟𝗮𝗽𝗼𝗿𝗮𝗻 𝗔𝗸𝗵𝗶𝗿 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟳 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-                      darkContent='"Optimalisasi Persediaan Toyota Motor Oil (TMO) Engine Oil pada Gudang Suku Cadang Toyota Auto2000 Cabang Pasteur Menggunakan Metode EOQ Deterministik dan Least Unit Cost"'
+                      darkContent="Optimalisasi Persediaan Toyota Motor Oil (TMO) Engine Oil pada Gudang Suku Cadang Toyota Auto2000 Cabang Pasteur Menggunakan Metode EOQ Deterministik dan Least Unit Cost"
                     />
                   </div>
                 </div>
@@ -640,7 +647,7 @@ function App() {
         <div className="w-full px-[10pt]">
 
           <div id="documentation" className="relative">
-            <div className="flex items-center justify-center gap-4 max-w-7xl mx-auto mb-16">
+            <div className="flex items-center justify-center gap-4 max-w-7xl mx-auto">
               <button
                 onClick={() => setDocPage((prev) => Math.max(0, prev - 1))}
                 disabled={docPage === 0}
@@ -666,7 +673,7 @@ function App() {
               </button>
             </div>
             
-            <div className="flex justify-center items-center gap-4 -mt-8 mb-16 md:hidden">
+            <div className="flex justify-center items-center gap-4 mt-8 md:hidden">
               <button
                 onClick={() => setDocPage((prev) => Math.max(0, prev - 1))}
                 disabled={docPage === 0}

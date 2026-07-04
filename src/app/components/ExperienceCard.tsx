@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Calendar, MapPin, ChevronDown, ChevronUp } from "lucide-react";
-import { ImageModal } from "./ImageModal";
 
 interface ExperienceCardProps {
   title: string;
-  company: string;
+  company: React.ReactNode;
   location: string;
   period: string;
   description: string;
@@ -29,7 +28,6 @@ export function ExperienceCard({
   employmentType,
   companyLogo,
 }: ExperienceCardProps) {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const photoList = images && images.length > 0 ? images : [image];
 
@@ -68,8 +66,8 @@ export function ExperienceCard({
             <img 
               src={photoList[0]} 
               alt={company} 
-              className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300" 
-              onClick={() => setSelectedImage(photoList[0])}
+              className="w-full h-full object-cover " 
+              
             />
           </div>
         ) : photoList.length === 2 ? (
@@ -79,8 +77,8 @@ export function ExperienceCard({
                 <img 
                   src={src} 
                   alt={company} 
-                  className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300" 
-                  onClick={() => setSelectedImage(src)}
+                  className="w-full h-full object-cover " 
+                  
                 />
               </div>
             ))}
@@ -92,8 +90,8 @@ export function ExperienceCard({
                 <img 
                   src={src} 
                   alt={company} 
-                  className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300" 
-                  onClick={() => setSelectedImage(src)}
+                  className="w-full h-full object-cover " 
+                  
                 />
               </div>
             ))}
@@ -105,8 +103,8 @@ export function ExperienceCard({
                 <img 
                   src={src} 
                   alt={company} 
-                  className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300" 
-                  onClick={() => setSelectedImage(src)}
+                  className="w-full h-full object-cover " 
+                  
                 />
               </div>
             ))}
@@ -118,8 +116,8 @@ export function ExperienceCard({
                 <img 
                   src={src} 
                   alt={company} 
-                  className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300" 
-                  onClick={() => setSelectedImage(src)}
+                  className="w-full h-full object-cover " 
+                  
                 />
               </div>
             ))}
@@ -128,20 +126,20 @@ export function ExperienceCard({
                 <img 
                   src={src} 
                   alt={company} 
-                  className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300" 
-                  onClick={() => setSelectedImage(src)}
+                  className="w-full h-full object-cover " 
+                  
                 />
               </div>
             ))}
           </div>
         )}
-
         <div className="p-6 pt-4">
           <div className="flex justify-between items-start gap-4 mb-4">
             <div className="flex items-start gap-4">
               {companyLogo && (
                 <img src={companyLogo} alt={`${company} logo`} className="w-16 h-16 object-contain shrink-0" />
               )}
+        
               <div>
                 <h3 className="text-2xl mb-2 text-gray-900 font-serif">{title}</h3>
                 <p className="text-xl text-gray-700">{company}</p>
@@ -182,6 +180,7 @@ export function ExperienceCard({
               {!isExpanded && (
                 <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
               )}
+        
             </div>
             <div 
               className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex justify-center items-center cursor-pointer z-10"
@@ -198,9 +197,7 @@ export function ExperienceCard({
         </div>
       </div>
 
-      {selectedImage && (
-        <ImageModal src={selectedImage} alt={company} onClose={() => setSelectedImage(null)} />
-      )}
+
     </div>
   );
 }

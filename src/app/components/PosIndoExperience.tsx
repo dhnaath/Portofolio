@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Calendar, MapPin, ChevronDown, ChevronUp } from "lucide-react";
-import { ImageModal } from "./ImageModal";
 
 interface Position {
   title: string;
@@ -21,7 +20,6 @@ interface PosIndoExperienceProps {
 }
 
 export function PosIndoExperience({ company, companyLogo, positions, description = "" }: PosIndoExperienceProps) {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Collect all unique images from all positions
@@ -62,8 +60,8 @@ export function PosIndoExperience({ company, companyLogo, positions, description
             <img 
               src={allImages[0]} 
               alt={company} 
-              className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300" 
-              onClick={() => setSelectedImage(allImages[0])}
+              className="w-full h-full object-cover " 
+              
             />
           </div>
         ) : allImages.length === 2 ? (
@@ -73,8 +71,8 @@ export function PosIndoExperience({ company, companyLogo, positions, description
                 <img 
                   src={src} 
                   alt={company} 
-                  className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300" 
-                  onClick={() => setSelectedImage(src)}
+                  className="w-full h-full object-cover " 
+                  
                 />
               </div>
             ))}
@@ -86,8 +84,8 @@ export function PosIndoExperience({ company, companyLogo, positions, description
                 <img 
                   src={src} 
                   alt={company} 
-                  className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300" 
-                  onClick={() => setSelectedImage(src)}
+                  className="w-full h-full object-cover " 
+                  
                 />
               </div>
             ))}
@@ -99,8 +97,8 @@ export function PosIndoExperience({ company, companyLogo, positions, description
                 <img 
                   src={src} 
                   alt={company} 
-                  className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300" 
-                  onClick={() => setSelectedImage(src)}
+                  className="w-full h-full object-cover " 
+                  
                 />
               </div>
             ))}
@@ -112,8 +110,8 @@ export function PosIndoExperience({ company, companyLogo, positions, description
                 <img 
                   src={src} 
                   alt={company} 
-                  className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300" 
-                  onClick={() => setSelectedImage(src)}
+                  className="w-full h-full object-cover " 
+                  
                 />
               </div>
             ))}
@@ -122,8 +120,8 @@ export function PosIndoExperience({ company, companyLogo, positions, description
                 <img 
                   src={src} 
                   alt={company} 
-                  className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300" 
-                  onClick={() => setSelectedImage(src)}
+                  className="w-full h-full object-cover " 
+                  
                 />
               </div>
             ))}
@@ -135,7 +133,8 @@ export function PosIndoExperience({ company, companyLogo, positions, description
           <div className="flex items-start gap-4">
             {companyLogo && (
               <img src={companyLogo} alt={`${company} logo`} className="w-16 h-16 object-contain shrink-0" />
-            )}
+              )}
+      
             <div>
               <h3 className="text-2xl mb-2 text-gray-900 font-serif">{company}</h3>
             </div>
@@ -151,6 +150,7 @@ export function PosIndoExperience({ company, companyLogo, positions, description
                   {/* Timeline connector */}
                   {index !== positions.length - 1 && (
                     <div className="absolute left-[7px] top-6 bottom-0 w-[2px] bg-gray-200"></div>
+            
                   )}
                   <div className="flex items-start gap-6">
                     {/* Timeline dot */}
@@ -186,7 +186,8 @@ export function PosIndoExperience({ company, companyLogo, positions, description
             })}
             {!isExpanded && (
               <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
-            )}
+              )}
+      
           </div>
           <div 
             className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex justify-center items-center cursor-pointer z-10"
@@ -203,9 +204,7 @@ export function PosIndoExperience({ company, companyLogo, positions, description
       </div>
       </div>
 
-      {selectedImage && (
-        <ImageModal src={selectedImage} alt={company} onClose={() => setSelectedImage(null)} />
-      )}
+
     </div>
   );
 }

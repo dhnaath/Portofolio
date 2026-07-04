@@ -4,8 +4,8 @@ import { Header } from "./Header";
 
 export function Hero() {
   return (
-    <section id="home" className="flex flex-col items-center justify-center bg-[#F9F8F5] relative pt-[46pt] pb-0 px-[10pt]">
-      <div className="flex flex-col items-center max-w-[calc(56rem+220pt)] w-full text-center mb-16 -translate-y-[30pt]">
+    <section id="home" className="flex flex-col items-center justify-center bg-[#F9F8F5] relative py-[25pt] px-[10pt]">
+      <div className="flex flex-col items-center max-w-[calc(56rem+220pt)] w-full text-center">
         <motion.div 
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}

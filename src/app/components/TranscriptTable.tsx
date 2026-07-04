@@ -91,14 +91,14 @@ const renderStars = (nilai: number) => {
       ))}
       {half && (
         <div className="relative">
-          <Star size={16} className="text-[#F4F3F0] fill-current" />
+          <Star size={16} className="text-gray-300 fill-current" />
           <div className="absolute top-0 left-0 overflow-hidden w-[50%]">
             <Star size={16} className="text-yellow-400 fill-current" />
           </div>
         </div>
       )}
       {[...Array(empty)].map((_, i) => (
-        <Star key={`e-${i}`} size={16} className="text-[#F4F3F0] fill-current" />
+        <Star key={`e-${i}`} size={16} className="text-gray-300 fill-current" />
       ))}
     </div>
   );
@@ -170,23 +170,23 @@ export function TranscriptTable() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-yellow-100 border border-yellow-300 rounded"></div>
-            <span className="text-sm text-[#5B6572] font-medium">Prasyarat</span>
+            <span className="text-sm text-gray-700 font-medium">Prasyarat</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
-            <span className="text-sm text-[#5B6572] font-medium">Ujian Khusus</span>
+            <span className="text-sm text-gray-700 font-medium">Ujian Khusus</span>
           </div>
         </div>
         <div className="flex items-center gap-[10px]">
-          <div className="flex items-center gap-1 bg-[#F4F3F0] p-1 rounded-lg">
-            <div className="px-3 py-1 text-sm font-medium text-[#5B6572]">
+          <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-lg">
+            <div className="px-3 py-1 text-sm font-medium text-gray-500">
               Semester
             </div>
             {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
               <button
                 key={sem}
                 onClick={() => setSelectedSemester(sem)}
-                className={`w-8 h-8 flex items-center justify-center text-sm font-medium rounded-md transition-colors ${selectedSemester === sem ? 'bg-[#FFFFFF] text-[#222222] shadow-sm' : 'text-[#5B6572] hover:text-[#5B6572]'}`}
+                className={`w-8 h-8 flex items-center justify-center text-sm font-medium rounded-md transition-colors ${selectedSemester === sem ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 {sem}
               </button>
@@ -194,10 +194,10 @@ export function TranscriptTable() {
           </div>
         </div>
       </div>
-      <div className="overflow-x-auto rounded-xl border border-[#5B6572]/30 shadow-sm bg-[#FFFFFF]">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm bg-white">
         <table className="w-full text-left border-collapse table-fixed min-w-[800px] font-serif">
           <thead>
-            <tr className="bg-[#F4F3F0] text-[#222222] border-b border-[#5B6572]/30 font-sans">
+            <tr className="bg-gray-100 text-gray-800 border-b border-gray-200 font-sans">
               <th className="py-4 px-4 font-semibold w-auto">Mata Kuliah</th>
               <th className="py-4 px-4 font-semibold w-20 text-center cursor-pointer hover:text-blue-600 transition-colors" onClick={toggleSortSKS}>
                 <div className="flex items-center justify-center gap-1">
@@ -217,13 +217,13 @@ export function TranscriptTable() {
               <th className="py-4 px-4 font-semibold text-center w-36">
                 <div className="flex items-center justify-center gap-1">
                   {[...Array(4)].map((_, i) => (
-                    <Star key={i} size={16} className="text-[#F4F3F0] fill-current" />
+                    <Star key={i} size={16} className="text-gray-300 fill-current" />
                   ))}
                 </div>
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 bg-[#FFFFFF]">
+          <tbody className="divide-y divide-gray-200 bg-white">
             {sortedCourses.map((course, index) => {
               const isHighlighted = highlightedCourses.includes(course.mataKuliah);
               const isRepeated = repeatedCourses.includes(course.mataKuliah);
@@ -242,18 +242,18 @@ export function TranscriptTable() {
                       : isHighlighted 
                       ? 'bg-yellow-100 hover:bg-yellow-200' 
                       : index % 2 === 1 
-                        ? 'bg-[#FFFFFF]/50 hover:bg-[#F4F3F0]' 
-                        : 'hover:bg-[#F4F3F0]'
+                        ? 'bg-white/50 hover:bg-gray-50' 
+                        : 'hover:bg-gray-50'
                   }`}
                 >
-                  <td className={`py-3 px-4 ${(isHighlighted || isRepeated) ? 'text-[#222222] font-medium truncate' : 'text-[#222222] truncate'}`}>{course.mataKuliah}</td>
-                  <td className="py-3 px-4 text-center text-[#5B6572]">{course.sks}</td>
-                  <td className="py-3 px-4 text-center text-[#5B6572]">{teori}</td>
-                  <td className="py-3 px-4 text-center text-[#5B6572]">{praktik}</td>
-                  <td className="py-3 px-4 text-center text-[#222222] font-medium">
+                  <td className={`py-3 px-4 ${(isHighlighted || isRepeated) ? 'text-gray-900 font-medium truncate' : 'text-gray-800 truncate'}`}>{course.mataKuliah}</td>
+                  <td className="py-3 px-4 text-center text-gray-600">{course.sks}</td>
+                  <td className="py-3 px-4 text-center text-gray-600">{teori}</td>
+                  <td className="py-3 px-4 text-center text-gray-600">{praktik}</td>
+                  <td className="py-3 px-4 text-center text-gray-800 font-medium">
                     {getLetterGrade(course.nilai)}
                   </td>
-                  <td className="py-3 px-4 text-center text-[#5B6572]">
+                  <td className="py-3 px-4 text-center text-gray-600">
                     {course.nilai.toFixed(1)}
                   </td>
                   <td className="py-3 px-4 text-center">

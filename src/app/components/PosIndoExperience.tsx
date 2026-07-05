@@ -26,9 +26,9 @@ export function PosIndoExperience({ company, companyLogo, positions, description
   const allImages = Array.from(new Set(positions.flatMap(pos => [pos.image, pos.image2, pos.image3, pos.image4]).filter(Boolean) as string[]));
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+    <div className="bg-[#FFFFFF] rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <div className="p-6 pb-4">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap justify-center gap-2 w-full">
           {(() => {
             const tags = description.split(/[;:\n]+/).map(t => t.trim()).filter(Boolean);
             const totalBars = tags.length;
@@ -36,13 +36,13 @@ export function PosIndoExperience({ company, companyLogo, positions, description
             for (let i = 0; i < totalBars; i++) {
               if (i < tags.length) {
                 renderedTags.push(
-                  <span key={i} className="bg-blue-50 text-blue-700 text-sm font-medium px-3 py-1 rounded-full border border-blue-100">
+                  <span key={i} className="bg-[#102A43]/10 text-[#102A43] text-xs sm:text-sm font-medium px-3 py-1.5 rounded-full border border-[#102A43]/20 flex-auto text-center whitespace-nowrap">
                     {tags[i]}
                   </span>
                 );
               } else {
                 renderedTags.push(
-                  <span key={i} className="bg-gray-50 text-transparent text-sm font-medium px-3 py-1 rounded-full border border-gray-100 w-24 inline-block">
+                  <span key={i} className="bg-[#F4F3F0] text-transparent text-xs sm:text-sm font-medium px-3 py-1.5 rounded-full border border-[#5B6572]/20 flex-auto text-center whitespace-nowrap">
                     &nbsp;
                   </span>
                 );
@@ -136,7 +136,7 @@ export function PosIndoExperience({ company, companyLogo, positions, description
               )}
       
             <div>
-              <h3 className="text-2xl mb-2 text-gray-900 font-serif">{company}</h3>
+              <h3 className="text-2xl mb-2 text-[#222222] font-serif">{company}</h3>
             </div>
           </div>
         </div>
@@ -154,11 +154,11 @@ export function PosIndoExperience({ company, companyLogo, positions, description
                   )}
                   <div className="flex items-start gap-6">
                     {/* Timeline dot */}
-                    <div className="w-4 h-4 rounded-full border-2 border-blue-500 bg-white mt-1.5 shrink-0 relative z-10"></div>
+                    <div className="w-4 h-4 rounded-full border-2 border-blue-500 bg-[#FFFFFF] mt-1.5 shrink-0 relative z-10"></div>
                     
                     <div className="flex-1 overflow-hidden">
-                      <h4 className="text-xl mb-3 text-gray-900 font-medium">{pos.title}</h4>
-                      <div className="flex flex-col gap-2 mb-4 text-gray-600 text-sm">
+                      <h4 className="text-xl mb-3 text-[#222222] font-medium">{pos.title}</h4>
+                      <div className="flex flex-col gap-2 mb-4 text-[#5B6572] text-sm">
                         <div className="flex items-center gap-2">
                           <MapPin size={16} />
                           <span>{pos.location}</span>
@@ -171,8 +171,8 @@ export function PosIndoExperience({ company, companyLogo, positions, description
 
                       <div>
                         <div>
-                          <p className="font-semibold text-gray-900 mb-2 font-sans">Key of Responsibilities:</p>
-                          <ol className="list-decimal list-outside ml-4 space-y-1 text-gray-700 text-justify">
+                          <p className="font-semibold text-[#222222] mb-2 font-sans">Key of Responsibilities:</p>
+                          <ol className="list-decimal list-outside ml-4 space-y-1 text-[#5B6572] text-justify">
                             {pos.achievements.map((achievement, i) => (
                               <li key={i}>{achievement}</li>
                             ))}
@@ -196,7 +196,7 @@ export function PosIndoExperience({ company, companyLogo, positions, description
               setIsExpanded(!isExpanded);
             }}
           >
-            <div className="text-gray-400 hover:text-gray-600 transition-colors bg-white rounded-full shadow-md border border-gray-100 p-1">
+            <div className="text-[#5B6572]/70 hover:text-[#5B6572] transition-colors bg-[#FFFFFF] rounded-full shadow-md border border-[#5B6572]/20 p-1">
               {isExpanded ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
             </div>
           </div>

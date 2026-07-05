@@ -1,16 +1,19 @@
 const fs = require('fs');
+let content = fs.readFileSync('src/app/App.tsx', 'utf8');
 
-let text = fs.readFileSync('src/app/components/TranscriptTable.tsx', 'utf-8');
+content = content.replace(
+  'const [transcriptPage, setTranscriptPage] = useState(3);',
+  'const [transcriptPage, setTranscriptPage] = useState(0);'
+);
 
-// 1. Update interface
-text = text.replace(/interface Course \{\n  mataKuliah: string;\n  sks: number;\n  nilai: number;\n\}/, 'interface Course {\n  mataKuliah: string;\n  sks: number;\n  nilai: number;\n  semester: number;\n}');
+content = content.replace(
+  'const transcriptLevels = ["Sekolah Dasar (SD)", "Sekolah Menengah Pertama (SMP)", "Sekolah Menengah Atas (SMA)", "Sarjana Terapan Logistik (S.Tr.Log.)", "Sertifikasi Lainnya"];',
+  'const transcriptLevels = ["Sarjana Terapan Logistik (S.Tr.Log.)", "Certified White Belt (The Council for Six Sigma Certification)"];'
+);
 
-// 2. Update courses
-const newCourses = fs.readFileSync('new_courses.txt', 'utf-8');
-text = text.replace(/const courses: Course\[\] = \[\s*[\s\S]*?\s*\];/, newCourses);
+content = content.replace(
+  '{transcriptPage === 3 ? (',
+  '{transcriptPage === 0 ? ('
+);
 
-// 3. Update filter logic
-const filterRegex = /filtered = courses\.filter\(\(c, i\) => \{\n\s*\/\/ Assume courses are distributed across 8 semesters for now\n\s*\/\/ This is a placeholder since we don't have actual semester data\n\s*const mockSemester = Math\.floor\(i \/ Math\.ceil\(courses\.length \/ 8\)\) \+ 1;\n\s*return \(c as any\)\.semester \? \(c as any\)\.semester === selectedSemester : mockSemester === selectedSemester;\n\s*\}\);/;
-text = text.replace(filterRegex, 'filtered = courses.filter(c => c.semester === selectedSemester);');
-
-fs.writeFileSync('src/app/components/TranscriptTable.tsx', text);
+fs.writeFileSync('src/app/App.tsx', content, 'utf8');

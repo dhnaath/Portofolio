@@ -4,13 +4,16 @@ import { Hero } from "./components/Hero";
 import { StickyHeader } from "./components/StickyHeader";
 import { motion } from "motion/react";
 
-function FlipbookCard({ category, title, content, darkContent }: { category: string, title: string, content: React.ReactNode, darkContent?: React.ReactNode }) {
+function FlipbookCard({ category, title, content, darkContent, darkImage, darkImages, link, customIcon }: { category: string, title: string, content: React.ReactNode, darkContent?: React.ReactNode, darkImage?: string, darkImages?: string[], link?: string, customIcon?: React.ReactNode }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [phase, setPhase] = useState<'idle' | 'spill' | 'text' | 'revert'>('idle');
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
   const [currentDirection, setCurrentDirection] = useState<'left' | 'right' | 'up' | 'down'>('left');
   const [revertDirection, setRevertDirection] = useState<'left' | 'right' | 'up' | 'down'>('right');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const darkImagesLength = darkImages?.length || 0;
 
   useEffect(() => {
     let isMounted = true;
@@ -22,11 +25,13 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
       await new Promise(r => setTimeout(r, initialDelay));
       while(isMounted) {
         setPhase('idle');
+        setCurrentImageIndex(0);
         // Randomize direction before each animation cycle
         setCurrentDirection(directions[Math.floor(Math.random() * directions.length)]);
         setRevertDirection(directions[Math.floor(Math.random() * directions.length)]);
-        // Wait in idle for 7.5s
-        await new Promise(r => setTimeout(r, 7500));
+
+        // Wait in idle for 5.5s
+        await new Promise(r => setTimeout(r, 5500));
         if (!isMounted) break;
         
         setPhase('spill');
@@ -35,8 +40,23 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
         if (!isMounted) break;
         
         setPhase('text');
-        // Hold short paragraph for 6 seconds
-        await new Promise(r => setTimeout(r, 6000));
+        
+        if (darkImagesLength > 0) {
+          // Hold first image for 6 seconds
+          await new Promise(r => setTimeout(r, 6000));
+          if (!isMounted) break;
+
+          for (let i = 1; i < darkImagesLength; i++) {
+            setCurrentImageIndex(i);
+            // Hold subsequent images for 6 seconds as well
+            await new Promise(r => setTimeout(r, 6000));
+            if (!isMounted) break;
+          }
+        } else {
+          // Hold short paragraph for 6 seconds
+          await new Promise(r => setTimeout(r, 6000));
+        }
+
         if (!isMounted) break;
         
         setPhase('revert');
@@ -46,7 +66,7 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
     };
     run();
     return () => { isMounted = false; };
-  }, []);
+  }, [darkImagesLength]);
 
   const getInitialPosition = () => {
     switch(currentDirection) {
@@ -75,7 +95,7 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
 
   return (
     <motion.div 
-      className="relative w-full md:w-[500px] h-[400px] cursor-pointer [perspective:1500px]"
+      className="relative w-full h-[400px] cursor-pointer [perspective:1500px]"
       onClick={() => setIsFlipped(!isFlipped)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
@@ -102,7 +122,7 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
       >
         {/* Front Face (Cover) */}
         <div 
-          className="absolute w-full h-full bg-white rounded-[2rem] border-2 border-gray-100 transition-shadow duration-300 p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] overflow-hidden"
+          className="absolute w-full h-full bg-[#FFFFFF] rounded-[2rem] border-2 border-[#5B6572]/20 transition-shadow duration-300 p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] overflow-hidden"
           style={{
             boxShadow: isHovered && !isFlipped
               ? `${-mousePos.x * 40}px ${-mousePos.y * 40}px 40px rgba(0,0,0,0.15)`
@@ -111,7 +131,7 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
         >
           {/* Sliding Background Element */}
           <motion.div 
-            className="absolute inset-0 bg-gray-900 z-10"
+            className="absolute inset-0 bg-[#222222] z-10"
             initial={false}
             animate={{ 
               x: phase === 'spill' || phase === 'text' ? '0%' : (phase === 'revert' ? getRevertPosition().x : getInitialPosition().x),
@@ -122,9 +142,9 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
             }}
           />
 
-          {/* Hidden Short Paragraph */}
+          {/* Hidden Short Paragraph / Image */}
           <motion.div 
-            className="absolute z-20 text-white p-8 text-center flex flex-col justify-center items-center"
+            className={`absolute z-20 text-[#FFFFFF] text-center flex flex-col justify-center items-center ${(darkImage || darkImages) ? 'inset-0 rounded-[2rem] overflow-hidden' : 'p-8'}`}
             initial={false}
             animate={{ 
               opacity: phase === 'text' ? 1 : 0,
@@ -134,13 +154,32 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
             transition={{ duration: 0.6, ease: "easeOut" }}
             style={{ pointerEvents: phase === 'text' ? 'auto' : 'none' }}
           >
-            <p className="font-cambria text-xl italic leading-relaxed">
-              {darkContent || '"Terkadang apa yang terlihat di luar, menyembunyikan sesuatu yang lebih dalam."'}
-            </p>
+            {darkImages && darkImages.length > 0 ? (
+              darkImages.map((img, idx) => (
+                <motion.img 
+                  key={idx}
+                  src={img} 
+                  alt={`${title} - ${idx}`}
+                  className="absolute inset-0 w-full h-full object-cover" 
+                  initial={false}
+                  animate={{
+                     x: currentImageIndex === idx ? '0%' : (idx < currentImageIndex ? '-100%' : '100%'),
+                     opacity: currentImageIndex === idx ? 1 : (idx < currentImageIndex ? 0.5 : 0)
+                  }}
+                  transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+                />
+              ))
+            ) : darkImage ? (
+              <img src={darkImage} alt={title} className="w-full h-full object-cover" />
+            ) : (
+              <p className="font-cambria text-xl italic leading-relaxed">
+                {darkContent || '"Terkadang apa yang terlihat di luar, menyembunyikan sesuatu yang lebih dalam."'}
+              </p>
+            )}
           </motion.div>
 
           <motion.div 
-            className="relative z-20 text-sm font-semibold text-gray-400 uppercase tracking-widest mb-4 font-sans origin-center"
+            className="relative z-20 text-sm font-semibold text-[#5B6572]/70 uppercase tracking-widest mb-4 font-sans origin-center"
             animate={
               phase === 'spill' || phase === 'text' ? {
                 scale: 0.95,
@@ -169,7 +208,7 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
             {category}
           </motion.div>
           <motion.div 
-            className="relative z-20 text-3xl font-bold text-gray-900 leading-tight mb-8 mt-[15pt] font-serif origin-center"
+            className="relative z-20 text-3xl font-bold text-[#222222] leading-tight mb-8 mt-[15pt] font-serif origin-center"
             animate={
               phase === 'spill' || phase === 'text' ? {
                 scale: 0.95,
@@ -200,11 +239,25 @@ function FlipbookCard({ category, title, content, darkContent }: { category: str
         </div>
 
         {/* Back Face (Inside Page) */}
-        <div className="absolute w-full h-full bg-gray-900 rounded-[2rem] border border-gray-800 shadow-lg p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-6 pb-4 border-b border-gray-800 w-full font-sans italic">{title}</div>
-          <div className="text-lg md:text-xl font-medium text-white leading-snug font-cambria">
+        <div className="absolute w-full h-full bg-[#222222] rounded-[2rem] border border-[#222222] shadow-lg p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <div className="text-sm font-semibold text-[#5B6572]/70 uppercase tracking-wider mb-6 pb-4 border-b border-[#222222] w-full font-sans italic">{title}</div>
+          <div className="text-lg md:text-xl font-medium text-[#FFFFFF] leading-snug font-cambria">
             {content}
           </div>
+          <a
+            href={link || "#"}
+            target={link ? "_blank" : undefined}
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!link) {
+                e.preventDefault();
+              }
+            }}
+            className="absolute bottom-8 right-8 text-[#5B6572] hover:text-[#FFFFFF] transition-colors z-30"
+          >
+            {customIcon || (link ? <ExternalLink size={24} /> : null)}
+          </a>
         </div>
       </div>
     </motion.div>
@@ -218,15 +271,25 @@ import { DocumentationCard } from "./components/DocumentationCard";
 import { CreativeCard } from "./components/CreativeCard";
 import { Footer } from "./components/Footer";
 import { TranscriptTable } from "./components/TranscriptTable";
+import { SixSigmaTable } from "./components/SixSigmaTable";
+import { HighSchoolTable } from "./components/HighSchoolTable";
 import { CVFlipbook } from "./components/CVFlipbook";
 import { FlipbookReveal } from "./components/FlipbookReveal";
 import { FloatingMetaButton } from "./components/FloatingMetaButton";
 import { FloatingDocuments } from "./components/FloatingDocuments";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, ExternalLink, FileText, ArrowDownRight } from "lucide-react";
 
 function App() {
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const [docPage, setDocPage] = useState(0);
+  const [transcriptPage, setTranscriptPage] = useState(0);
+  const transcriptLevels = [
+    { title: "Sekolah Menengah Atas", institution: "SMA Negeri 8 Pontianak", period: "Tahun Pelajaran 2017/2018 – 2019/2020" },
+    { title: "Sarjana Terapan Logistik (S.Tr.Log.)", institution: "Universitas Logistik dan Bisnis Internasional (ULBI)", period: "Oktober 2021 – November 2025" },
+    { title: "Certified White Belt", institution: "The Council for Six Sigma Certification (CSSC)", period: "September 2024" }
+  ];
+
+
 
   // PT Pos Indonesia - Multiple Positions (Mosaic Layout)
   const posIndoData = {
@@ -415,7 +478,7 @@ function App() {
     },
     // 6. Grab Teknologi Indonesia
     {
-      title: "Online Driver",
+      title: "Driver & Courier",
       company: (
         <>
           Grab Teknologi Indonesia<br />
@@ -427,7 +490,6 @@ function App() {
       period: "Feb 2026 s.d. Sekarang",
       employmentType: "Mandiri, Tanpa Jam Operasional dan Wilayah Tetap (Freelancer)",
       description: "Transportasi; Jasa Layanan; Kurir-Ojek; Pesan-Antar; Aplikasi",
-      companyLogo: "https://logo.clearbit.com/grab.com",
       achievements: [
         "Melayani transportasi penumpang serta distribusi makanan dan paket barang dengan memastikan keamanan, kebersihan, dan ketepatan waktu hingga ke lokasi tujuan.",
         "Berkoordinasi secara aktif dengan pelanggan, mitra restoran, dan pihak keamanan/parkir demi kelancaran proses ambil-antar pesanan.",
@@ -435,6 +497,12 @@ function App() {
         "Mematuhi standar operasional dengan menggunakan atribut resmi serta merawat kondisi kendaraan secara rutin guna meminimalisir kendala teknis di jalan."
       ],
       image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+      images: [
+        "https://play-lh.googleusercontent.com/OmBwUGuTJxaV0gW04sQjvGaxlgxHr83z88dQCD0gJy7_dX9gM2APUE6CmyWFT27kb1-ASDQq5iZlNnkfwsjgdQ=w480-h960-rw",
+        "https://play-lh.googleusercontent.com/gvn6nri4v_KAjbR2KW_iWmbGUmrJYiP-QRVAmpCUmFHvza2gqw2MI6qS9U7o3J_XZM8UKlm4aKjaOEddJKDO3w=w480-h960-rw",
+        "https://play-lh.googleusercontent.com/2INhmztKw86TAsrMDdYj_BLMNsvIBv968VPsNpFSIEjB2E2vRu0r-Z-E9PDjBNukKBgmmp2xxfs6tYBIInkNBQ=w480-h960-rw",
+        "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/06/a3/49/06a349b5-5f74-43ae-be7d-2f84361aa214/Placeholder.mill/400x400bb-75.webp"
+      ],
     },
     // 7. Mandiri Utama Finance
     {
@@ -455,32 +523,98 @@ function App() {
     }
   ];
 
-  const documentation = [
+    const documentation = [
     {
-      title: "API Documentation Framework",
-      description:
-        "Comprehensive documentation system for RESTful APIs with interactive examples and code snippets in multiple languages.",
-      type: "Technical Documentation",
-      tags: ["API", "REST", "OpenAPI", "Documentation"],
-      link: "#",
+      title: "Dasar Procurement & Purchasing di Perusahaan",
+      description: "Recorded Workshop Praktikal Berprojek",
+      type: "Ioda Academy",
+      date: "Mei 2025",
+      tags: ["Training", "Certification", "Professional"],
+      externalLink: "https://drive.google.com/file/d/1hEQUPywU-ce3x1P-zyiUre65oYf4bZhV/view?usp=drive_link",
+      hideFileIcon: true,
+      bgColor: "#59247b",
+      textColor: "#FFFFFF",
     },
     {
-      title: "User Guide: Cloud Platform",
+      title: "Six Sigma (64/80) - White Belt",
       description:
-        "End-user documentation for cloud platform onboarding, featuring step-by-step tutorials and troubleshooting guides.",
-      type: "User Documentation",
-      tags: ["Cloud", "Tutorial", "User Guide"],
-      link: "#",
+        "A Council for Six Sigma Certification (CSSC) Certified Six Sigma White Belt is an individual that has been provided, and has demonstrated an understanding of the most basic level of the Six Sigma Methodology. The White Belt Certification designation also reflects knowledge by the individual of the basic definition, history, and structure of the discipline. This understanding provides a solid awareness of who is involved in the actual Six Sigma implementation, and their roles within an organization.",
+      type: "The Council for Six Sigma Certification (CSSC)",
+      date: "September 2024",
+      tags: ["Statistical Analysis", "Quality Assurance", "Root Cause Analysis"],
+      link: "https://drive.google.com/file/d/1agmr5AjaqT8rjYe1pZ_ldwN4--8KXFS5/view?usp=drive_link",
+      externalLink: "https://drive.google.com/file/d/1Sx60x5R7G0eTpk6tOOIi1OYLlozMuZpi/view?usp=drive_link",
+      bgColor: "#d1d1d1",
     },
     {
-      title: "Architecture Design Documents",
+      title: "Lean Six Sigma (68/80) - White Belt",
       description:
-        "Series of design documents outlining system architecture, data flow diagrams, and technical specifications for enterprise applications.",
-      type: "Technical Specification",
-      tags: ["Architecture", "System Design", "Enterprise"],
-      link: "#",
-    }
+        "A Council for Six Sigma Certification (CSSC) Certified Lean Six Sigma White Belt is an individual that has been provided, and has demonstrated an understanding of the most basic level of the Six Sigma Methodology. The White Belt Certification designation also reflects knowledge by the individual of the basic definition, history, and structure of the discipline. This understanding provides a solid awareness of who is involved in the actual Six Sigma implementation, and their roles within an organization.",
+      type: "The Council for Six Sigma Certification (CSSC)",
+      date: "September 2024",
+      tags: ["Waste Elimination", "Value Stream Mapping", "Efficiency Optimization"],
+      link: "https://drive.google.com/file/d/1L7iJxXMprCnnOpsJ5ojFq9Zc6VqW_d8-/view?usp=drive_link",
+      externalLink: "https://drive.google.com/file/d/1Sx60x5R7G0eTpk6tOOIi1OYLlozMuZpi/view?usp=drive_link",
+      bgColor: "#d1d1d1",
+    },
+    {
+      title: "Sertifikasi Keagenan Asuransi Jiwa Syariah",
+      description: "Comprehensive training on modern warehouse operations, inventory control, and WMS software integration.",
+      type: "Asosiasi Asuransi Syariah Indonesia (AASI)",
+      date: "Februari 2024 - Februari 2026",
+      credentialId: "3321012070258823",
+      tags: ["Warehouse Operations", "Inventory Control", "WMS"],
+      hideFileIcon: true,
+      bgColor: "#1a5f7a",
+      textColor: "#FFFFFF",
+    },
+    {
+      title: "Sertifikasi Keagenan Asuransi Jiwa",
+      description: "Advanced course on identifying, assessing, and mitigating risks in global supply chain networks.",
+      type: "Asosiasi Asuransi Jiwa Indonesia (AAJI)",
+      date: "Februari 2024 - Februari 2026",
+      credentialId: "15270228",
+      tags: ["Risk Management", "Global Supply Chain", "Mitigation"],
+      hideFileIcon: true,
+      bgColor: "#b71c1c",
+      textColor: "#FFFFFF",
+    },
+    {
+      title: "SAP01 - SAP Overview",
+      description:
+        "SAP01 is the prerequisite course for all other SAP courses. SAP01 is designed to provide the participant with baseline knowledge of SAP solutions, applications, components, and terminology. Because this is an overview course the details of the SAP applications and components are left to subsequent courses.",
+      type: "Edugate Indonesia",
+      date: "Januari 2024",
+      tags: ["Enterprise Resource Planning", "Business Process Management", "Digital Business System"],
+      link: "https://drive.google.com/file/d/1mJbFisDzebcPYk3EE5Ypv_Bvk5RbNgo_/view?usp=drive_link",
+      bgColor: "#00B7F0",
+      textColor: "#FFFFFF",
+    },
+    {
+      title: "CEFR - B1 Intermediate (302)",
+      description: "The global mobile English test and certificate. Built by academic experts, aligned to an international standard (CEFR) and delivered using the latest AI technology.",
+      type: "British Council",
+      date: "Jun 2023",
+      tags: ["Language", "Proficiency", "English"],
+      hideFileIcon: true,
+      bgColor: "#23085A",
+      textColor: "#FFFFFF",
+    },
   ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDocPage((prev) => (prev === 0 ? Math.max(0, documentation.length - 3) : prev - 1));
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [documentation.length, docPage]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTranscriptPage((prev) => (prev >= transcriptLevels.length - 1 ? 0 : prev + 1));
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [transcriptLevels.length, transcriptPage]);
 
   const creativeProjects = [
     {
@@ -501,13 +635,20 @@ function App() {
     },
   ];
 
+  const [lang, setLang] = useState<'ID' | 'EN'>('ID');
+
   return (
-    <div className="min-h-screen bg-[#F9F8F5] font-sans">
+    <div className="min-h-screen bg-[#F4F3F0] font-sans">
+      <div className="fixed top-6 right-6 md:top-8 md:right-10 z-[100] flex items-center gap-2 font-sans text-sm font-semibold text-[#222222] bg-[#F4F3F0]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-[#5B6572]/20 shadow-sm">
+        <span className={`cursor-pointer transition-opacity ${lang === 'EN' ? 'opacity-100' : 'opacity-40 hover:opacity-70'}`} onClick={() => setLang('EN')}>EN</span>
+        <span className="opacity-40">|</span>
+        <span className={`cursor-pointer transition-opacity ${lang === 'ID' ? 'opacity-100' : 'opacity-40 hover:opacity-70'}`} onClick={() => setLang('ID')}>ID</span>
+      </div>
       <StickyHeader />
-      <Hero />
+      <Hero lang={lang} />
 
       {/* Work Experience Section - Reverse Chronological Order (Latest to Earliest) */}
-      <section id="experience" className="py-[25pt] bg-[#F9F8F5]">
+      <section id="experience" className="py-[25pt] bg-[#F4F3F0]">
         <div className="w-full px-[10pt]">
           
           <div className="relative w-full overflow-hidden flex py-8">
@@ -517,7 +658,7 @@ function App() {
                 100% { transform: translateX(-50%); }
               }
               .animate-marquee {
-                animation: marquee 88s linear infinite;
+                animation: marquee 86s linear infinite;
               }
             `}} />
             <div 
@@ -561,18 +702,126 @@ function App() {
         </div>
       </section>
 
+
+      {/* Proyek Section */}
+      <section id="proyek" className="py-[25pt] bg-[#F4F3F0]">
+        <div className="w-full px-[10pt]">
+          <div id="documentation" className="relative">
+            <div className="flex items-center justify-center gap-4 max-w-7xl mx-auto">
+              <button
+                onClick={() => setDocPage((prev) => (prev === 0 ? Math.max(0, documentation.length - 3) : prev - 1))}
+                className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] hidden md:flex shrink-0 transition-all hover:scale-105"
+                aria-label="Previous page"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
+                {documentation.slice(docPage, docPage + 3).map((doc, index) => (
+                  <DocumentationCard key={index} {...doc} />
+                ))}
+              </div>
+
+              <button
+                onClick={() => setDocPage((prev) => (prev >= Math.max(0, documentation.length - 3) ? 0 : prev + 1))}
+                className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] hidden md:flex shrink-0 transition-all hover:scale-105"
+                aria-label="Next page"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
+            
+            <div className="flex justify-center items-center gap-4 mt-8 md:hidden">
+              <button
+                onClick={() => setDocPage((prev) => (prev === 0 ? Math.max(0, documentation.length - 3) : prev - 1))}
+                className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] shrink-0 transition-all hover:scale-105"
+                aria-label="Previous page"
+              >
+                <ChevronLeft size={24} />
+              </button>
+
+              <button
+                onClick={() => setDocPage((prev) => (prev >= Math.max(0, documentation.length - 3) ? 0 : prev + 1))}
+                className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] shrink-0 transition-all hover:scale-105"
+                aria-label="Next page"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* Academic Logbook Section */}
-      <section id="akademik" className="py-[25pt] bg-[#F9F8F5]">
+      <section id="akademik" className="pt-[25pt] pb-[15pt] bg-[#F4F3F0]">
         <div className="w-full px-[10pt]">
           
-          <div className="relative w-full overflow-hidden flex py-8 mb-12">
+          <div className="flex items-center justify-center gap-4 max-w-7xl mx-auto w-full">
+            <button
+              onClick={() => setTranscriptPage((prev) => (prev === 0 ? transcriptLevels.length - 1 : prev - 1))}
+              className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] hidden md:flex shrink-0 transition-all hover:scale-105"
+              aria-label="Previous transcript"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            
+            <div className="w-full max-w-5xl overflow-hidden min-h-[500px]">
+              <div id="transcript" className="text-center mb-8 flex flex-col items-center" style={{ gap: '5pt' }}>
+                <h3 className="text-3xl text-[#222222] font-serif transition-opacity duration-300 m-0 leading-tight">
+                  {transcriptLevels[transcriptPage].title}
+                </h3>
+                <p className="text-xl text-[#5B6572] font-serif transition-opacity duration-300 m-0 leading-tight">
+                  {transcriptLevels[transcriptPage].institution}
+                </p>
+                {transcriptLevels[transcriptPage].period && (
+                  <p className="text-sm md:text-base text-[#5B6572]/80 font-sans transition-opacity duration-300 m-0 leading-tight">
+                    {transcriptLevels[transcriptPage].period}
+                  </p>
+                )}
+              </div>
+              
+              <div className="transition-opacity duration-300">
+                {transcriptPage === 0 && <HighSchoolTable />}
+                {transcriptPage === 1 && <TranscriptTable />}
+                {transcriptPage === 2 && <SixSigmaTable />}
+              </div>
+            </div>
+
+            <button
+              onClick={() => setTranscriptPage((prev) => (prev >= transcriptLevels.length - 1 ? 0 : prev + 1))}
+              className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] hidden md:flex shrink-0 transition-all hover:scale-105"
+              aria-label="Next transcript"
+            >
+              <ChevronRight size={24} />
+            </button>
+          </div>
+          
+          <div className="flex justify-center items-center gap-4 mt-8 md:hidden">
+            <button
+              onClick={() => setTranscriptPage((prev) => (prev === 0 ? transcriptLevels.length - 1 : prev - 1))}
+              className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] shrink-0 transition-all hover:scale-105"
+              aria-label="Previous transcript"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <button
+              onClick={() => setTranscriptPage((prev) => (prev >= transcriptLevels.length - 1 ? 0 : prev + 1))}
+              className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] shrink-0 transition-all hover:scale-105"
+              aria-label="Next transcript"
+            >
+              <ChevronRight size={24} />
+            </button>
+          </div>
+
+          
+          
+          <div className="relative w-full overflow-hidden flex py-8 mt-12 mb-12">
             <style dangerouslySetInnerHTML={{__html: `
               @keyframes marquee-reverse {
                 0% { transform: translateX(-50%); }
                 100% { transform: translateX(0%); }
               }
               .animate-marquee-reverse {
-                animation: marquee-reverse 66s linear infinite;
+                animation: marquee-reverse 78s linear infinite;
               }
             `}} />
             <div 
@@ -584,10 +833,41 @@ function App() {
                 <div key={i} className="flex gap-8 min-w-max items-start">
                   <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
                     <FlipbookCard 
+                      category="Kegiatan"
+                      title="CHARACTER BUILDING KE-20"
+                      content="Kegiatan Character Building ke-20 untuk pembentukan karakter."
+                      darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/CB%20(1)_page-0001.jpg?raw=true"
+                      customIcon={<ArrowDownRight size={24} />}
+                    />
+                  </div>
+                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                    <FlipbookCard 
+                      category="Kegiatan"
+                      title="LKMM TERABUMI 2021"
+                      content="Latihan Keterampilan Manajemen Mahasiswa (LKMM) Tingkat Dasar."
+                      darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/LKMM.png?raw=true"
+                      customIcon={<ArrowDownRight size={24} />}
+                    />
+                  </div>
+                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                    <FlipbookCard 
+                      category="Kunjungan Industri"
+                      title="PT DSV Solutions Indonesia"
+                      content="Mahasiswa tahun kedua Program Studi D3 dan D4 Logistik Bisnis melaksanakan kunjungan industri pada 9 Juni 2023 ke PT. DSV Solutions Indonesia (Pondok Ungu Site), Kota Bekasi, Jawa Barat."
+                      darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/KI.png?raw=true"
+                      customIcon={<ArrowDownRight size={24} />}
+                    />
+                  </div>
+                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                    <FlipbookCard 
                       category="Proyek Logistik I"
                       title="Business Process"
                       content="Tugas besar berupa observasi 𝗣𝗿𝗼𝘀𝗲𝘀 𝗕𝗶𝘀𝗻𝗶𝘀 milik perusahaan untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟭 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟮 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-                      darkContent="Observasi TKBM pada PT. Persero Batam"
+                      darkImages={[
+                        "https://github.com/dhnaath/Resources-Portofolio/blob/main/1708894833625.jpg?raw=true",
+                        "https://github.com/dhnaath/Resources-Portofolio/blob/main/1711427302442.jpg?raw=true"
+                      ]}
+                      customIcon={<ArrowDownRight size={24} />}
                     />
                   </div>
                   <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
@@ -595,7 +875,8 @@ function App() {
                       category="Proyek Logistik II"
                       title="Design Thinking"
                       content="Tugas besar berbentuk 𝗗𝗲𝘀𝗶𝗴𝗻 𝗧𝗵𝗶𝗻𝗸𝗶𝗻𝗴 untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟮 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟯 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-                      darkContent="Pembungkus Paket dari Pati Singkong"
+                      darkImage="https://media.licdn.com/dms/image/v2/D562DAQGfDCaKyTBnxg/profile-treasury-image-shrink_1280_1280/profile-treasury-image-shrink_1280_1280/0/1708894056035?e=1783872000&v=beta&t=FMeYzo6FTMaXfSZAXu5_nb4L_nozmOB4LeCjJ1i8zU4"
+                      customIcon={<ArrowDownRight size={24} />}
                     />
                   </div>
                   <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
@@ -604,14 +885,11 @@ function App() {
                       title="House of Quality"
                       content="Tugas besar berbentuk 𝗛𝗼𝘂𝘀𝗲 𝗼𝗳 𝗤𝘂𝗮𝗹𝗶𝘁𝘆 (𝗛𝗢𝗤) untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟯 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟱 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
                       darkContent="HOQ Inovasi Whoosh Pengiriman Barang Same Day Jakarta-Bandung"
-                    />
-                  </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
-                    <FlipbookCard 
-                      category="Kerja Praktik II"
-                      title="Skripsi"
-                      content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟮 dan 𝗦𝗸𝗿𝗶𝗽𝘀𝗶 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟴 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-                      darkContent="Analisis Kualitas Pelayanan PT. Pos Indonesia (Persero) Cabang KPRK Sintang 78600 untuk Meningkatkan Kepuasan Pelanggan dengan Integrasi ServQual dan IPA"
+                      darkImages={[
+                        "https://github.com/dhnaath/Resources-Portofolio/blob/main/1708894126465.jpg?raw=true",
+                        "https://github.com/dhnaath/Resources-Portofolio/blob/main/1714586513717.jpg?raw=true"
+                      ]}
+                      customIcon={<ArrowDownRight size={24} />}
                     />
                   </div>
                   <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
@@ -619,7 +897,23 @@ function App() {
                       category="Seminar"
                       title="International Joint Effort Seminar Programme on Logistics and Supply Chain"
                       content="Seminar dan Kompetisi Internasional dengan tema Inovasi pada Logistik dan Supply Chain Management hasil kolaborasi dengan Politeknik Nilai Malaysia"
-                      darkContent="Awardee for Favorite Judges"
+                      darkImages={[
+                        "https://github.com/dhnaath/Resources-Portofolio/blob/main/seminar%20baru.png?raw=true",
+                        "https://github.com/dhnaath/Resources-Portofolio/blob/main/1709873546407.jpg?raw=true"
+                      ]}
+                      customIcon={<ArrowDownRight size={24} />}
+                    />
+                  </div>
+                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                    <FlipbookCard 
+                      category="Seminar"
+                      title="Awardee for Favorite Judges"
+                      content="Penghargaan untuk Favorite Judges pada acara Seminar Internasional."
+                      darkImages={[
+                        "https://github.com/dhnaath/Resources-Portofolio/blob/main/APPRECIATION%20CERT_page-0001.jpg?raw=true",
+                        "https://github.com/dhnaath/Resources-Portofolio/blob/main/FAVJUDG.png?raw=true"
+                      ]}
+                      customIcon={<ArrowDownRight size={24} />}
                     />
                   </div>
                   <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
@@ -628,74 +922,26 @@ function App() {
                       title="Rencana Penelitian"
                       content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟭 dan 𝗟𝗮𝗽𝗼𝗿𝗮𝗻 𝗔𝗸𝗵𝗶𝗿 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟳 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
                       darkContent="Optimalisasi Persediaan Toyota Motor Oil (TMO) Engine Oil pada Gudang Suku Cadang Toyota Auto2000 Cabang Pasteur Menggunakan Metode EOQ Deterministik dan Least Unit Cost"
+                      customIcon={<div className="flex items-center gap-2"><FileText size={24} /><ArrowDownRight size={24} /></div>}
+                      link="https://drive.google.com/file/d/1ZpdHl4ABP2CNCyaZlSs19R5ngxjG09Ke/view?usp=drive_link"
+                    />
+                  </div>
+                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                    <FlipbookCard 
+                      category="Kerja Praktik II"
+                      title="Skripsi"
+                      content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟮 dan 𝗦𝗸𝗿𝗶𝗽𝘀𝗶 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟴 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
+                      darkContent="Analisis Kualitas Pelayanan PT. Pos Indonesia (Persero) Cabang KPRK Sintang 78600 untuk Meningkatkan Kepuasan Pelanggan dengan Integrasi ServQual dan IPA"
+                      customIcon={<div className="flex items-center gap-2"><FileText size={24} /><ArrowDownRight size={24} /></div>}
+                      link="https://drive.google.com/file/d/1ACG-GMGG3btYs0Vz0ZdQHzoa4eNDucmU/view?usp=drive_link"
                     />
                   </div>
                 </div>
               ))}
             </div>
           </div>
-
-          <div id="transcript" className="text-center mb-12">
-            <h3 className="text-3xl mb-4 text-gray-900 font-serif">Sarjana Terapan Logistik (S.Tr.Log.)</h3>
-          </div>
-          <TranscriptTable />
         </div>
       </section>
-
-      {/* Proyek Section */}
-      <section id="proyek" className="py-[25pt] bg-[#F9F8F5]">
-        <div className="w-full px-[10pt]">
-
-          <div id="documentation" className="relative">
-            <div className="flex items-center justify-center gap-4 max-w-7xl mx-auto">
-              <button
-                onClick={() => setDocPage((prev) => Math.max(0, prev - 1))}
-                disabled={docPage === 0}
-                className="p-2 rounded-full bg-white shadow-md text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hidden md:flex shrink-0"
-                aria-label="Previous page"
-              >
-                <ChevronLeft size={24} />
-              </button>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
-                {documentation.slice(docPage * 3, docPage * 3 + 3).map((doc, index) => (
-                  <DocumentationCard key={index} {...doc} />
-                ))}
-              </div>
-
-              <button
-                onClick={() => setDocPage((prev) => Math.min(Math.ceil(documentation.length / 3) - 1, prev + 1))}
-                disabled={docPage >= Math.ceil(documentation.length / 3) - 1 || documentation.length === 0}
-                className="p-2 rounded-full bg-white shadow-md text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed hidden md:flex shrink-0"
-                aria-label="Next page"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
-            
-            <div className="flex justify-center items-center gap-4 mt-8 md:hidden">
-              <button
-                onClick={() => setDocPage((prev) => Math.max(0, prev - 1))}
-                disabled={docPage === 0}
-                className="p-2 rounded-full bg-white shadow-md text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-                aria-label="Previous page"
-              >
-                <ChevronLeft size={24} />
-              </button>
-              <button
-                onClick={() => setDocPage((prev) => Math.min(Math.ceil(documentation.length / 3) - 1, prev + 1))}
-                disabled={docPage >= Math.ceil(documentation.length / 3) - 1 || documentation.length === 0}
-                className="p-2 rounded-full bg-white shadow-md text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-                aria-label="Next page"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
 
       <Footer />
       <FloatingDocuments />

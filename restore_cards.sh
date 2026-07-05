@@ -1,3 +1,5 @@
+#!/bin/bash
+cat << 'INNER_EOF' > restore.cjs
 const fs = require('fs');
 let content = fs.readFileSync('src/app/App.tsx', 'utf8');
 
@@ -58,3 +60,5 @@ const fixed = `                  <div className="w-[85vw] sm:w-[500px] md:w-[560
 
 content = content.replace(target, fixed);
 fs.writeFileSync('src/app/App.tsx', content, 'utf8');
+INNER_EOF
+node restore.cjs

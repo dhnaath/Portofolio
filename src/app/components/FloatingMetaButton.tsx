@@ -22,9 +22,7 @@ export function FloatingMetaButton() {
     <div 
       ref={containerRef}
       className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex items-center"
-      onClick={() => {
-         if (!isExpanded) setIsExpanded(true);
-      }}
+      
     >
       <motion.div
         className="relative flex items-center"
@@ -34,14 +32,15 @@ export function FloatingMetaButton() {
       >
         {/* The 3-dot handle (visible when collapsed) */}
         <motion.div 
-          className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer border-2 border-[#c29661] border-r-0 shadow-[-4px_0_15px_rgba(0,0,0,0.1)] z-20 origin-right"
+          onClick={() => { if (!isExpanded) setIsExpanded(true); }}
+          className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer shadow-[-4px_0_15px_rgba(0,0,0,0.1)] z-20 origin-right"
           style={{
             borderTopLeftRadius: "30px",
             borderBottomLeftRadius: "30px",
             width: "48px",
             height: "120px",
-            backgroundColor: '#D4A373',
-            backgroundImage: 'radial-gradient(circle at center, #D4A373 0%, #C4905D 100%)'
+            backgroundColor: '#D4B886',
+            backgroundImage: 'radial-gradient(circle at center, #D4B886 0%, #C4A570 100%)'
           }}
           animate={{ 
             opacity: isExpanded ? 0 : 1, 
@@ -50,7 +49,7 @@ export function FloatingMetaButton() {
           transition={{ duration: 0.2 }}
         >
           <div className="mr-1">
-            <MoreVertical size={28} className="text-gray-900" strokeWidth={2.5} />
+            <MoreVertical size={28} className="text-[#222222]" strokeWidth={2.5} />
           </div>
         </motion.div>
         
@@ -60,7 +59,8 @@ export function FloatingMetaButton() {
           style={{
             width: "288px",
             height: "168px",
-            transformStyle: "preserve-3d"
+            transformStyle: "preserve-3d",
+            pointerEvents: isExpanded ? "auto" : "none"
           }}
           animate={{ 
             rotateY: isFlipped ? 180 : 0,
@@ -72,14 +72,14 @@ export function FloatingMetaButton() {
         >
           {/* Front of Card (Squid Game Shapes) */}
           <div 
-            className="absolute inset-0 rounded-lg shadow-2xl flex items-center justify-center border-2 border-[#c29661]"
+            className="absolute inset-0 rounded-lg shadow-2xl flex items-center justify-center"
             style={{ 
-              backgroundColor: '#D4A373', 
+              backgroundColor: '#D4B886', 
               backfaceVisibility: 'hidden', 
-              backgroundImage: 'radial-gradient(circle at center, #D4A373 0%, #C4905D 100%)' 
+              backgroundImage: 'radial-gradient(circle at center, #D4B886 0%, #C4A570 100%)' 
             }}
           >
-            <svg width="156" height="53" viewBox="0 0 130 44" className="text-gray-900 fill-transparent stroke-current stroke-[4] stroke-linejoin-round">
+            <svg width="156" height="53" viewBox="0 0 130 44" className="text-[#222222] fill-transparent stroke-current stroke-[4] stroke-linejoin-round">
               <circle cx="22" cy="22" r="16" />
               <polygon points="65,6 81,38 49,38" />
               <rect x="94" y="6" width="30" height="30" />
@@ -88,16 +88,16 @@ export function FloatingMetaButton() {
           
           {/* Back of Card (Text) */}
           <div 
-            className="absolute inset-0 rounded-lg shadow-2xl flex flex-col items-center justify-center border-2 border-[#c29661] p-4 text-center"
+            className="absolute inset-0 rounded-lg shadow-2xl flex flex-col items-center justify-center p-4 text-center"
             style={{ 
-              backgroundColor: '#D4A373', 
+              backgroundColor: '#D4B886', 
               transform: 'rotateY(180deg)', 
               backfaceVisibility: 'hidden', 
-              backgroundImage: 'radial-gradient(circle at center, #D4A373 0%, #C4905D 100%)' 
+              backgroundImage: 'radial-gradient(circle at center, #D4B886 0%, #C4A570 100%)' 
             }}
           >
-             <div className="text-gray-900 font-mono font-bold text-3xl tracking-[0.3em] opacity-80 mb-2">001</div>
-             <div className="text-gray-900 text-base font-semibold tracking-widest opacity-70">CONFIDENTIAL</div>
+             <div className="text-[#222222] font-mono font-bold text-3xl tracking-[0.3em] opacity-80 mb-2">001</div>
+             <div className="text-[#222222] text-base font-semibold tracking-widest opacity-70">CONFIDENTIAL</div>
           </div>
         </motion.div>
       </motion.div>

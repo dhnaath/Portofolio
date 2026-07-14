@@ -1,0 +1,6 @@
+{
+  "name": "Dhnaath Portfolio",
+  "description": "Portfolio from https://github.com/dhnaath/Portofolio.git",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

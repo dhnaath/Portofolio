@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
-import { StickyHeader } from "./components/StickyHeader";
 import { motion, AnimatePresence } from "motion/react";
 
-function FlipbookCard({ category, title, content, darkContent, darkImage, darkImages, link, customIcon }: { category: string, title: string, content: React.ReactNode, darkContent?: React.ReactNode, darkImage?: string, darkImages?: string[], link?: string, customIcon?: React.ReactNode }) {
+function FlipbookCard({ category, title, content, darkContent, darkImage, darkImages, imageClassName, link, customIcon, topLeftIcon, disableFlip, disableSlide, lightMode }: { category: string, title: React.ReactNode, content: React.ReactNode, darkContent?: React.ReactNode, darkImage?: string, darkImages?: string[], imageClassName?: string, link?: string, customIcon?: React.ReactNode, topLeftIcon?: React.ReactNode, disableFlip?: boolean, disableSlide?: boolean, lightMode?: boolean }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [phase, setPhase] = useState<'idle' | 'spill' | 'text' | 'revert'>('idle');
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -16,6 +14,8 @@ function FlipbookCard({ category, title, content, darkContent, darkImage, darkIm
   const darkImagesLength = darkImages?.length || 0;
 
   useEffect(() => {
+    if (disableSlide) return;
+    
     let isMounted = true;
     
     const initialDelay = Math.random() * 2000;
@@ -95,8 +95,10 @@ function FlipbookCard({ category, title, content, darkContent, darkImage, darkIm
 
   return (
     <motion.div 
-      className="relative w-full h-[400px] cursor-pointer [perspective:1500px]"
-      onClick={() => setIsFlipped(!isFlipped)}
+      className={`relative w-full h-[290px] [perspective:1500px] ${!disableFlip ? 'cursor-pointer' : ''}`}
+      onClick={() => {
+        if (!disableFlip) setIsFlipped(!isFlipped);
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         setIsHovered(false);
@@ -131,7 +133,7 @@ function FlipbookCard({ category, title, content, darkContent, darkImage, darkIm
         >
           {/* Sliding Background Element */}
           <motion.div 
-            className="absolute inset-0 bg-[#222222] z-10"
+            className={`absolute inset-0 z-10 ${(lightMode || darkImage || (darkImages && darkImages.length > 0)) ? 'bg-[#FFFFFF]' : 'bg-[#222222]'}`}
             initial={false}
             animate={{ 
               x: phase === 'spill' || phase === 'text' ? '0%' : (phase === 'revert' ? getRevertPosition().x : getInitialPosition().x),
@@ -144,7 +146,7 @@ function FlipbookCard({ category, title, content, darkContent, darkImage, darkIm
 
           {/* Hidden Short Paragraph / Image */}
           <motion.div 
-            className={`absolute z-20 text-[#FFFFFF] text-center flex flex-col justify-center items-center ${(darkImage || darkImages) ? 'inset-0 rounded-[2rem] overflow-hidden' : 'p-8'}`}
+            className={`absolute z-20 ${lightMode ? 'text-[#222222]' : 'text-[#FFFFFF]'} text-center flex flex-col justify-center items-center ${(darkImage || darkImages) ? 'inset-0 rounded-[2rem] overflow-hidden' : 'p-8'}`}
             initial={false}
             animate={{ 
               opacity: phase === 'text' ? 1 : 0,
@@ -160,7 +162,7 @@ function FlipbookCard({ category, title, content, darkContent, darkImage, darkIm
                   key={idx}
                   src={img} 
                   alt={`${title} - ${idx}`}
-                  className="absolute inset-0 w-full h-full object-cover" 
+                  className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} 
                   initial={false}
                   animate={{
                      x: currentImageIndex === idx ? '0%' : (idx < currentImageIndex ? '-100%' : '100%'),
@@ -170,16 +172,22 @@ function FlipbookCard({ category, title, content, darkContent, darkImage, darkIm
                 />
               ))
             ) : darkImage ? (
-              <img src={darkImage} alt={title} className="w-full h-full object-cover" />
+              <div className={`absolute inset-0 flex items-center justify-center ${imageClassName?.includes('scale') ? 'bg-white' : ''}`}>
+                <img src={darkImage} alt={title as string} className={`w-full h-full object-cover ${imageClassName || ''} pointer-events-none select-none`} draggable={false} onContextMenu={(e) => e.preventDefault()} />
+              </div>
+            ) : darkContent ? (
+              <div className="w-full">
+                {darkContent}
+              </div>
             ) : (
-              <p className="font-cambria text-xl italic leading-relaxed">
-                {darkContent || '"Terkadang apa yang terlihat di luar, menyembunyikan sesuatu yang lebih dalam."'}
+              <p className="font-cambria text-[17px] italic leading-relaxed">
+                "Terkadang apa yang terlihat di luar, menyembunyikan sesuatu yang lebih dalam."
               </p>
             )}
           </motion.div>
 
           <motion.div 
-            className="relative z-20 text-sm font-semibold text-[#5B6572]/70 uppercase tracking-widest mb-4 font-sans origin-center"
+            className="relative z-20 text-[11px] font-semibold text-[#5B6572]/70 uppercase tracking-widest mb-4 font-sans origin-center"
             animate={
               phase === 'spill' || phase === 'text' ? {
                 scale: 0.95,
@@ -208,7 +216,7 @@ function FlipbookCard({ category, title, content, darkContent, darkImage, darkIm
             {category}
           </motion.div>
           <motion.div 
-            className="relative z-20 text-3xl font-bold text-[#222222] leading-tight mb-8 mt-[15pt] font-serif origin-center"
+            className="relative z-20 text-[22px] font-bold text-[#222222] leading-tight mb-8 mt-[15pt] font-serif origin-center"
             animate={
               phase === 'spill' || phase === 'text' ? {
                 scale: 0.95,
@@ -239,9 +247,14 @@ function FlipbookCard({ category, title, content, darkContent, darkImage, darkIm
         </div>
 
         {/* Back Face (Inside Page) */}
-        <div className="absolute w-full h-full bg-[#222222] rounded-[2rem] border border-[#222222] shadow-lg p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          <div className="text-sm font-semibold text-[#5B6572]/70 uppercase tracking-wider mb-6 pb-4 border-b border-[#222222] w-full font-sans italic">{title}</div>
-          <div className="text-lg md:text-xl font-medium text-[#FFFFFF] leading-snug font-cambria">
+        <div className="absolute w-full h-full bg-[#222222] rounded-[2rem] shadow-lg p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          {topLeftIcon && (
+            <div className="absolute top-8 left-8 text-[#5B6572] z-30 pointer-events-none">
+              {topLeftIcon}
+            </div>
+          )}
+          <div className="text-[11px] font-semibold text-[#5B6572]/70 uppercase tracking-wider mb-6 pb-4 border-b border-[#222222] w-full font-sans italic">{title}</div>
+          <div className="text-[15px] md:text-[17px] font-medium text-[#FFFFFF] leading-snug font-cambria">
             {content}
           </div>
           <a
@@ -271,22 +284,51 @@ import { DocumentationCard } from "./components/DocumentationCard";
 import { CreativeCard } from "./components/CreativeCard";
 import { Footer } from "./components/Footer";
 import { TranscriptTable } from "./components/TranscriptTable";
-import { SixSigmaTable } from "./components/SixSigmaTable";
 import { HighSchoolTable } from "./components/HighSchoolTable";
+import { MiddleSchoolTable } from "./components/MiddleSchoolTable";
+import { ElementarySchoolTable } from "./components/ElementarySchoolTable";
 import { CVFlipbook } from "./components/CVFlipbook";
 import { FlipbookReveal } from "./components/FlipbookReveal";
 import { FloatingMetaButton } from "./components/FloatingMetaButton";
 import { FloatingDocuments } from "./components/FloatingDocuments";
-import { Star, ChevronLeft, ChevronRight, ExternalLink, FileText, ArrowDownRight } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, ExternalLink, FileText, ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 function App() {
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const [docPage, setDocPage] = useState(0);
   const [transcriptPage, setTranscriptPage] = useState(0);
+  const [designPage, setDesignPage] = useState(0);
+
+  const designGroups = [
+    [
+      { title: "Desain 1", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/454416991_1194139031788901_3721232300998524358_n.jpg?raw=true", rotation: "-rotate-3", delay: "0.2s" },
+      { title: "Desain 3", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/454491791_1206186407068031_8930531019005467898_n.jpg?raw=true", rotation: "rotate-1", delay: "0.6s" },
+    ],
+    [
+      { title: "Desain 2", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/454363865_3318337168463084_4793837023871862832_n.jpg?raw=true", rotation: "rotate-2", delay: "0.4s" },
+    ],
+    [
+      { title: "Financial Model", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/Desain%20tanpa%20judul.png?raw=true", rotation: "-rotate-3", delay: "0.2s" },
+    ],
+    [
+      { title: "Pitch Deck", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/Dhia%20Najmi%20Athallah.png?raw=true", rotation: "-rotate-3", delay: "0.4s" },
+    ],
+    [
+      { title: "Brand Identity", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/Desain%20Tanpa%20Judul%20-%202.jpg?raw=true", rotation: "rotate-3", delay: "0.2s" },
+    ],
+    [
+      { title: "Market Research", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/Survei%20Kepuasan%20Pelanggan%20Berhadiah.png?raw=true", rotation: "rotate-2", delay: "0.4s" },
+    ],
+    [
+      { title: "Project Design", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/085161629923%20(WA)%20-%204.png?raw=true", rotation: "rotate-1", delay: "0.2s" },
+    ]
+  ];
+
   const transcriptLevels = [
-    { title: "Sekolah Menengah Atas", institution: "SMA Negeri 8 Pontianak", period: "Tahun Pelajaran 2017/2018 – 2019/2020" },
-    { title: "Sarjana Terapan Logistik (S.Tr.Log.)", institution: "Universitas Logistik dan Bisnis Internasional (ULBI)", period: "Oktober 2021 – November 2025" },
-    { title: "Certified White Belt", institution: "The Council for Six Sigma Certification (CSSC)", period: "September 2024" }
+    { title: "SD/MI/Sederajat", npsn: "NPSN: 30103040", institution: "SD Negeri 01 Lanjak", period: "Tahun Pelajaran 2013/2014", akreditasi: "A", link: "https://sekolah.data.kemendikdasmen.go.id/profil-sekolah/903B0F09-30F5-E011-9EB4-8B25DB501A9D" },
+    { title: "SMP/MTs/Sederajat", npsn: "NPSN: 30102940", institution: "SMP Negeri 1 Batang Lupar", period: "Tahun Pelajaran 2016/2017", akreditasi: "B", link: "https://sekolah.data.kemendikdasmen.go.id/profil-sekolah/F09BB109-30F5-E011-90C6-F9C4ACF3E380" },
+    { title: "SMA/MA/SMK/MAK/Sederajat", npsn: "NPSN: 30105204", institution: "SMA Negeri 8 Pontianak", period: "Tahun Pelajaran 2019/2020", akreditasi: "A", link: "https://sekolah.data.kemendikdasmen.go.id/profil-sekolah/04531D4B-7A11-4B2D-B063-6664362CE129" },
+    { title: "Universitas Logistik dan Bisnis Internasional (ULBI)", npsn: "PDDikti: 041104", institution: "Sarjana Terapan Logistik (S.Tr.Log.)", period: "Oktober 2021 – November 2025", akreditasi: "B", akreditasiBottom: "Baik Sekali", link: "https://pddikti.kemdiktisaintek.go.id/detail-prodi/ODloXNDeYp9ggYjIE1_rHnAoLqKGWJDhO3uFfP-zRjprQ4PjJGEX5QcL9E1w28bgTBt3vQ==" }
   ];
 
 
@@ -321,6 +363,7 @@ function App() {
         image: "https://github.com/dhnaath/Website-Portofolio/blob/main/1741149010112.jpg?raw=true",
         image2: "https://github.com/dhnaath/Website-Portofolio/blob/main/1744248285339.jpg?raw=true",
         image3: "https://github.com/dhnaath/Website-Portofolio/blob/main/1741061244804.jpg?raw=true",
+        image4: "https://github.com/dhnaath/Resources-Portofolio/blob/main/IMG_20250328_130218.jpg?raw=true",
       },
       {
         title: "Assistant Supervisor",
@@ -346,6 +389,7 @@ function App() {
         image: "https://github.com/dhnaath/Website-Portofolio/blob/main/1744606643657.jpg?raw=true",
         image2: "https://github.com/dhnaath/Website-Portofolio/blob/main/1745206623859.jpg?raw=true",
         image3: "https://github.com/dhnaath/Website-Portofolio/blob/main/1746614254530.jpg?raw=true",
+        image4: "https://github.com/dhnaath/Resources-Portofolio/blob/main/1744450132598.jpg?raw=true",
       },
     ],
   };
@@ -396,6 +440,8 @@ function App() {
         ],
         image: "https://raw.githubusercontent.com/dhnaath/Website-Portofolio/main/1763565039525.jpg",
         image2: "https://raw.githubusercontent.com/dhnaath/Website-Portofolio/main/1763565179282.jpg",
+        image3: "https://github.com/dhnaath/Resources-Portofolio/blob/main/IMG-20251113-WA0009.jpg.jpg?raw=true",
+        image4: "https://github.com/dhnaath/Resources-Portofolio/blob/main/2025-10-13%2013.45.57_.jpg?raw=true",
       },
     ],
   };
@@ -615,7 +661,7 @@ function App() {
         "Assisted clients in the application process, starting from completing document files until the funds were successfully disbursed.",
         "Coordinated actively with the MUF team to ensure the administrative and application processes ran according to applicable operational standards."
       ],
-      image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+      image: "https://raw.githubusercontent.com/dhnaath/Resources-Portofolio/7e2ca40fc301d01a04786dff4cdd43098e054ab7/unnamed.png",
     }
   ];
 
@@ -700,10 +746,10 @@ function App() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setDocPage((prev) => (prev === 0 ? Math.max(0, documentation.length - 3) : prev - 1));
+      setDocPage((prev) => (prev >= Math.max(0, documentation.length - 4) ? 0 : prev + 1));
     }, 3000);
     return () => clearInterval(timer);
-  }, [documentation.length, docPage]);
+  }, [documentation.length]);
 
   const creativeProjects = [
     {
@@ -728,19 +774,22 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#F4F3F0] font-sans">
-      <div className="fixed top-6 right-6 md:top-8 md:right-10 z-[100] flex items-center gap-2 font-sans text-sm font-semibold text-[#222222] bg-[#F4F3F0]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-[#5B6572]/20 shadow-sm">
+      <div className="fixed top-6 right-6 md:top-8 md:right-10 z-[100] flex items-center gap-2 font-sans text-sm font-semibold text-[#222222] bg-[#F4F3F0]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-[#5B6572]/20 shadow-sm scale-200 origin-top-right">
         <span className={`cursor-pointer transition-opacity ${lang === 'EN' ? 'opacity-100' : 'opacity-40 hover:opacity-70'}`} onClick={() => setLang('EN')}>EN</span>
         <span className="opacity-40">|</span>
         <span className={`cursor-pointer transition-opacity ${lang === 'ID' ? 'opacity-100' : 'opacity-40 hover:opacity-70'}`} onClick={() => setLang('ID')}>ID</span>
       </div>
-      <StickyHeader />
       <Hero lang={lang} />
 
       {/* Work Experience Section - Reverse Chronological Order (Latest to Earliest) */}
-      <section id="experience" className="py-[25pt] bg-[#F4F3F0]">
+      <section id="experience" className="pt-[25pt] pb-0 bg-[#F4F3F0]">
         <div className="w-full px-[10pt]">
+          <div className="flex flex-col items-center justify-center gap-1 mb-[10pt] opacity-40">
+            <h2 className="text-xl md:text-2xl font-bold text-[#222222]">Working Experiences</h2>
+            <p className="text-sm font-cambria text-[#222222] text-center">Professional Journey, Career Path, and Strategic Contributions</p>
+          </div>
           
-          <div className="relative w-full overflow-hidden flex py-8">
+          <div className="relative w-full overflow-hidden flex pt-0 pb-0">
             <style dangerouslySetInnerHTML={{__html: `
               @keyframes marquee {
                 0% { transform: translateX(0%); }
@@ -751,37 +800,37 @@ function App() {
               }
             `}} />
             <div 
-              className={`flex gap-8 px-4 animate-marquee min-w-max group cursor-pointer`}
-              style={{ animationPlayState: isCarouselPaused ? 'paused' : 'running' }}
+              className={`flex gap-[10pt] px-4 animate-marquee min-w-max group cursor-pointer`}
+              style={{ animationPlayState: isCarouselPaused ? 'paused' : 'running', zoom: 1.05 }}
               onClick={() => setIsCarouselPaused(!isCarouselPaused)}
             >
               {[...Array(2)].map((_, i) => (
-                <div key={i} className="flex gap-8 min-w-max items-start">
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                <div key={i} className="flex gap-[10pt] min-w-max items-start">
+                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
                     <ExperienceCard {...experiences[6]} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
                     <ExperienceCard {...experiences[5]} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
                     <KspNusantaraExperience {...kspNusantaraData} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
                     <PosIndoExperience {...posIndoData} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
                     <ExperienceCard {...experiences[1]} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
                     <ExperienceCard {...experiences[0]} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
                     <ExperienceCard {...experiences[2]} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
                     <ExperienceCard {...experiences[4]} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
                     <ExperienceCard {...experiences[3]} lang={lang} />
                   </div>
                 </div>
@@ -793,102 +842,321 @@ function App() {
 
 
       {/* Proyek Section */}
-      <section id="proyek" className="py-[25pt] bg-[#F4F3F0]">
+      <section id="proyek" className="pt-[50pt] pb-[50pt] bg-[#F4F3F0]">
         <div className="w-full px-[10pt]">
-          <div id="documentation" className="relative">
-            <div className="flex items-center justify-center gap-4 max-w-7xl mx-auto">
-              <button
-                onClick={() => setDocPage((prev) => (prev === 0 ? Math.max(0, documentation.length - 3) : prev - 1))}
-                className="p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] hidden md:flex shrink-0 transition-all hover:scale-105"
-                aria-label="Previous page"
-              >
-                <ChevronLeft size={36} />
-              </button>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
-                {documentation.slice(docPage, docPage + 3).map((doc, index) => (
-                  <DocumentationCard key={index} {...doc} />
-                ))}
+          <div id="documentation" className="relative max-w-7xl mx-auto px-4 md:px-8">
+            <div className="hidden md:flex w-full gap-8 mb-6">
+              <div className="flex flex-col items-center gap-1 opacity-40 w-1/2">
+                <h2 className="text-xl md:text-2xl font-bold text-[#222222] text-center">Profile Qualifications</h2>
+                <p className="text-sm font-cambria text-[#222222] text-center">Certifications, Licenses, Memberships, Competencies, Skills, and Achievements.</p>
               </div>
-
-              <button
-                onClick={() => setDocPage((prev) => (prev >= Math.max(0, documentation.length - 3) ? 0 : prev + 1))}
-                className="p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] hidden md:flex shrink-0 transition-all hover:scale-105"
-                aria-label="Next page"
-              >
-                <ChevronRight size={36} />
-              </button>
+              <div className="flex flex-col items-center gap-1 opacity-40 w-1/2">
+                <h2 className="text-xl md:text-2xl font-bold text-[#222222] text-center">Personal Designs</h2>
+                <p className="text-sm font-cambria text-[#222222] text-center">Creative Works & Portfolios</p>
+              </div>
             </div>
-            
-            <div className="flex justify-center items-center gap-4 mt-8 md:hidden">
-              <button
-                onClick={() => setDocPage((prev) => (prev === 0 ? Math.max(0, documentation.length - 3) : prev - 1))}
-                className="p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] shrink-0 transition-all hover:scale-105"
-                aria-label="Previous page"
-              >
-                <ChevronLeft size={36} />
-              </button>
+            <div className="flex flex-col md:flex-row items-stretch w-full gap-8">
+              {/* Menu Section (50%) */}
+              <div className="w-full md:w-1/2 flex flex-col items-center justify-center">
+                <div className="flex flex-col w-full h-full">
+                  <div className="flex md:hidden flex-col items-center gap-1 mb-[10pt] opacity-40 w-full">
+                    <h2 className="text-xl md:text-2xl font-bold text-[#222222] text-center">Profile Qualifications</h2>
+                    <p className="text-sm font-cambria text-[#222222] text-center">Certifications, Licenses, Memberships, Competencies, Skills, and Achievements.</p>
+                  </div>
+                  <div className="flex items-center justify-center gap-4 w-full h-full">
+                    <button
+                      onClick={() => setDocPage((prev) => (prev === 0 ? Math.max(0, documentation.length - 4) : prev - 1))}
+                      className="p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] hidden md:flex shrink-0 transition-all scale-[0.85] hover:scale-100"
+                      aria-label="Previous page"
+                    >
+                      <ChevronLeft size={36} />
+                    </button>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+                      {documentation.slice(docPage, docPage + 4).map((doc, index) => (
+                        <DocumentationCard key={index} {...doc} compact />
+                      ))}
+                    </div>
 
-              <button
-                onClick={() => setDocPage((prev) => (prev >= Math.max(0, documentation.length - 3) ? 0 : prev + 1))}
-                className="p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] shrink-0 transition-all hover:scale-105"
-                aria-label="Next page"
-              >
-                <ChevronRight size={36} />
-              </button>
+                    <button
+                      onClick={() => setDocPage((prev) => (prev >= Math.max(0, documentation.length - 4) ? 0 : prev + 1))}
+                      className="p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] hidden md:flex shrink-0 transition-all scale-[0.85] hover:scale-100"
+                      aria-label="Next page"
+                    >
+                      <ChevronRight size={36} />
+                    </button>
+                  </div>
+                  
+                  <div className="flex justify-center items-center gap-4 mt-8 md:hidden">
+                    <button
+                      onClick={() => setDocPage((prev) => (prev === 0 ? Math.max(0, documentation.length - 4) : prev - 1))}
+                      className="p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] shrink-0 transition-all scale-[0.85] hover:scale-100"
+                      aria-label="Previous page"
+                    >
+                      <ChevronLeft size={36} />
+                    </button>
+                    <button
+                      onClick={() => setDocPage((prev) => (prev >= Math.max(0, documentation.length - 4) ? 0 : prev + 1))}
+                      className="p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] shrink-0 transition-all scale-[0.85] hover:scale-100"
+                      aria-label="Next page"
+                    >
+                      <ChevronRight size={36} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {/* Personal Designs Section (50%) */}
+              <div className="w-full md:w-1/2 flex flex-col items-center justify-center">
+                <style dangerouslySetInnerHTML={{__html: `
+                  @keyframes float-random {
+                    0% { transform: translateY(0px) rotate(-2deg); }
+                    50% { transform: translateY(-8px) rotate(2deg); }
+                    100% { transform: translateY(0px) rotate(-2deg); }
+                  }
+                  .animate-float-random {
+                    animation: float-random 6s ease-in-out infinite;
+                  }
+                `}} />
+                
+                <div className="flex md:hidden flex-col items-center gap-1 mb-6 opacity-40 w-full">
+                  <h2 className="text-xl md:text-2xl font-bold text-[#222222] text-center">Personal Designs</h2>
+                  <p className="text-sm font-cambria text-[#222222] text-center">Creative Works & Portfolios</p>
+                </div>
+                
+                <div className="flex items-center justify-center gap-4 w-full h-full">
+                  <button
+                    onClick={() => setDesignPage((prev) => (prev - 1 < 0 ? designGroups.length - 1 : prev - 1))}
+                    className="p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] hidden md:flex shrink-0 transition-all scale-[0.85] hover:scale-100"
+                    aria-label="Previous design"
+                  >
+                    <ChevronLeft size={36} />
+                  </button>
+                  <div className={`flex flex-col ${designGroups[designPage].length > 2 ? 'gap-3 md:gap-4' : 'gap-6'} w-full h-full`}>
+                    {designGroups[designPage].map((design, index) => (
+                      <div 
+                        key={`${design.title}-${index}`}
+                        className={`w-full flex-1 min-h-0 relative transition-all duration-500 ease-in-out hover:scale-[1.02] hover:z-30 hover:rotate-0 hover:animate-none animate-float-random cursor-pointer group`}
+                        style={{ animationDelay: design.delay }}
+                      >
+                        <img src={design.image} alt={design.title} className="absolute inset-0 w-full h-full object-contain filter drop-shadow-xl group-hover:scale-105 transition-transform duration-500 pointer-events-none select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} />
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setDesignPage((prev) => (prev + 1) % designGroups.length)}
+                    className="p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] hidden md:flex shrink-0 transition-all scale-[0.85] hover:scale-100"
+                    aria-label="Next design"
+                  >
+                    <ChevronRight size={36} />
+                  </button>
+                </div>
+                
+                <div className="flex justify-center items-center gap-4 mt-6 md:hidden">
+                  <button
+                    onClick={() => setDesignPage((prev) => (prev - 1 < 0 ? designGroups.length - 1 : prev - 1))}
+                    className="p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] shrink-0 transition-all scale-[0.85] hover:scale-100"
+                    aria-label="Previous page"
+                  >
+                    <ChevronLeft size={36} />
+                  </button>
+                  <button
+                    onClick={() => setDesignPage((prev) => (prev + 1) % designGroups.length)}
+                    className="p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] shrink-0 transition-all scale-[0.85] hover:scale-100"
+                    aria-label="Next page"
+                  >
+                    <ChevronRight size={36} />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
       {/* Academic Logbook Section */}
-      <section id="akademik" className="pt-[25pt] pb-[15pt] bg-[#F4F3F0]">
+      <section id="akademik" className="pt-0 pb-0 bg-[#F4F3F0]">
         <div className="w-full px-[10pt]">
+          <div className="flex flex-col items-center justify-center gap-1 mt-[25pt] mb-[10pt] opacity-40">
+            <h2 className="text-xl md:text-2xl font-bold text-[#222222]">Academic Logbook</h2>
+            <p className="text-sm font-cambria text-[#222222] text-center">Thesis, Publications, Research Planning, Projects, Seminars, and Transcripts</p>
+          </div>
           
-          <div className="flex items-center justify-center gap-4 max-w-7xl mx-auto w-full">
-            <div className="w-full max-w-5xl overflow-hidden min-h-[500px]">
-              <div id="transcript" className="mb-8 flex items-center justify-between md:justify-center w-full gap-2 md:gap-8 px-2 md:px-0">
-                <button
-                  onClick={() => setTranscriptPage((prev) => (prev === 0 ? transcriptLevels.length - 1 : prev - 1))}
-                  className="p-2 md:p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] flex shrink-0 transition-all hover:scale-105"
-                  aria-label="Previous transcript"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-                <div className="text-center flex flex-col items-center flex-1" style={{ gap: '5pt' }}>
-                  <h3 className="text-2xl md:text-3xl text-[#222222] font-serif transition-opacity duration-300 m-0 leading-tight">
-                    {transcriptLevels[transcriptPage].title}
-                  </h3>
-                  <p className="text-lg md:text-xl text-[#5B6572] font-serif transition-opacity duration-300 m-0 leading-tight">
-                    {transcriptLevels[transcriptPage].institution}
-                  </p>
-                  {transcriptLevels[transcriptPage].period && (
-                    <p className="text-sm md:text-base text-[#5B6572]/80 font-sans transition-opacity duration-300 m-0 leading-tight">
-                      {transcriptLevels[transcriptPage].period}
-                    </p>
+          <div className="flex items-center justify-center gap-4 max-w-7xl mx-auto w-full relative">
+            <div className="w-full max-w-7xl min-h-[500px]">
+              {transcriptPage === 3 ? (
+                <div className="flex w-[calc(100%-17pt)] mx-auto items-center justify-between px-4 md:px-8 h-[65pt] pb-0">
+                  <div className="text-left text-2xl md:text-3xl text-[#222222] font-serif transition-opacity duration-300 m-0 leading-tight whitespace-nowrap">
+                    Universitas Logistik dan Bisnis Internasional (ULBI)
+                  </div>
+                  {transcriptLevels[transcriptPage].npsn && (
+                    <div className="flex items-center gap-[30pt] mr-[30pt]">
+                      <div className="text-right text-[#5B6572] font-serif transition-opacity duration-300 m-0 leading-tight text-[calc(1.125rem-1pt)] md:text-[calc(1.25rem-1pt)] whitespace-nowrap">
+                        {transcriptLevels[transcriptPage].npsn}
+                      </div>
+                      <div className="text-right text-[#5B6572] font-serif transition-opacity duration-300 m-0 leading-tight text-[calc(1.125rem-1pt)] md:text-[calc(1.25rem-1pt)] whitespace-nowrap">
+                        Akreditasi: {transcriptLevels[transcriptPage].akreditasi}
+                      </div>
+                    </div>
                   )}
                 </div>
+              ) : (
+                <div className="flex items-center justify-center gap-4 w-full h-[65pt] pb-0">
+                  {/* Desktop Buttons Placeholder */}
+                  <div className="hidden md:flex shrink-0 p-3 opacity-0 pointer-events-none select-none">
+                    <ChevronLeft size={36} />
+                  </div>
+                  
+                  <div className="flex flex-col md:flex-row items-center md:items-stretch w-full gap-8">
+                    {/* Left Section (30%) */}
+                    <div className="w-full md:w-[30%] flex justify-center items-center">
+                      <div className="text-center text-2xl md:text-3xl text-[#222222] font-serif transition-opacity duration-300 m-0 leading-tight whitespace-nowrap">
+                        {transcriptPage === 0 && "SD Negeri 01 Lanjak"}
+                        {transcriptPage === 1 && "SMP Negeri 1 Batang Lupar"}
+                        {transcriptPage === 2 && "SMA Negeri 8 Pontianak"}
+                      </div>
+                    </div>
+                    
+                    {/* Right Section (70%) */}
+                    <div className="w-full md:w-[70%] flex justify-end items-center">
+                      {transcriptLevels[transcriptPage].npsn && (
+                        <div className="flex items-center gap-[30pt] mr-[30pt]">
+                          <div className="text-right text-[#5B6572] font-serif transition-opacity duration-300 m-0 leading-tight text-[calc(1.125rem-1pt)] md:text-[calc(1.25rem-1pt)] whitespace-nowrap">
+                            {transcriptLevels[transcriptPage].npsn}
+                          </div>
+                          <div className="text-right text-[#5B6572] font-serif transition-opacity duration-300 m-0 leading-tight text-[calc(1.125rem-1pt)] md:text-[calc(1.25rem-1pt)] whitespace-nowrap">
+                            Akreditasi: {transcriptLevels[transcriptPage].akreditasi}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Desktop Buttons Placeholder */}
+                  <div className="hidden md:flex shrink-0 p-3 opacity-0 pointer-events-none select-none">
+                    <ChevronRight size={36} />
+                  </div>
+                </div>
+              )}
+              <div id="transcript" className="flex items-start justify-center gap-4 w-full h-full group mt-[10pt]">
+                {/* Desktop Buttons */}
+                <button
+                  onClick={() => setTranscriptPage((prev) => (prev === 0 ? transcriptLevels.length - 1 : prev - 1))}
+                  className="hidden md:flex shrink-0 mt-[120pt] p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] transition-all scale-[0.85] hover:scale-100 z-10"
+                  aria-label="Previous transcript"
+                >
+                  <ChevronLeft size={36} />
+                </button>
+                <div className="flex flex-col md:flex-row items-center md:items-stretch w-full gap-8">
+                  {/* Text Section (30%) */}
+                  <div className="w-full md:w-[30%] flex flex-col items-center justify-start text-center order-2 md:order-1 h-full py-4" style={{ gap: '0' }}>
+                  <div className="flex flex-col items-center w-full mt-[35pt]">
+                    <div className="w-full min-h-[80px] md:min-h-[100px] flex flex-col justify-end items-center gap-2">
+                      <h3 className={`text-xl md:text-2xl text-[#222222] font-serif m-0 leading-tight ${transcriptPage < 2 ? 'hidden' : ''}`}>
+                        {transcriptPage === 3 ? transcriptLevels[transcriptPage].institution : (
+                          <>
+                            Matematika dan<br />
+                            Ilmu Pengetahuan Alam<br />
+                            (MIPA)
+                          </>
+                        )}
+                      </h3>
+                    </div>
+                    
+                    <div className="w-full flex justify-center items-start mt-[20pt]">
+                      {transcriptPage !== 3 ? (
+                        <p className="text-lg md:text-xl text-[#5B6572] font-serif italic transition-opacity duration-300 m-0 leading-tight">
+                          {transcriptLevels[transcriptPage].title}
+                        </p>
+                      ) : (
+                        <p className="text-lg md:text-xl text-[#5B6572] font-serif italic transition-opacity duration-300 m-0 leading-tight">
+                          D-IV/S-1/KKNI Level 6/Sederajat
+                        </p>
+                      )}
+                    </div>
+                    
+                    <div className="flex flex-col items-center justify-start w-full mt-[15pt]">
+                      {transcriptLevels[transcriptPage].period && (
+                        <div className="flex flex-col items-center">
+                          <p className="text-sm md:text-base text-[#5B6572]/80 font-sans transition-opacity duration-300 m-0 leading-tight">
+                            {transcriptLevels[transcriptPage].period}
+                          </p>
+                        {transcriptPage === 3 && (
+                          <>
+                            <p className="text-lg md:text-xl text-[#5B6572] font-serif transition-opacity duration-300 m-0 leading-tight mt-[25pt]">
+                              Program Studi: Logistik Bisnis
+                            </p>
+                            <p className="text-lg md:text-xl text-[#5B6572] font-serif transition-opacity duration-300 m-0 leading-tight mt-[7pt]">
+                              Akreditasi: {transcriptLevels[transcriptPage].akreditasiBottom || transcriptLevels[transcriptPage].akreditasi}
+                            </p>
+                          </>
+                        )}
+                        <a 
+                          href={transcriptLevels[transcriptPage].link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-[25pt] group flex items-center gap-2 text-[#5B6572] transition-colors cursor-pointer hover:text-[#222222] outline-none focus:outline-none"
+                          style={{ WebkitTapHighlightColor: 'transparent' }}
+                        >
+                          <img 
+                            src={transcriptPage === 3 
+                              ? "https://github.com/dhnaath/Resources-Portofolio/blob/main/Desain%20tanpa%20judul%20(2).png?raw=true" 
+                              : "https://github.com/dhnaath/Resources-Portofolio/blob/main/Desain%20tanpa%20judul%20(1).png?raw=true"}
+                            alt="Document"
+                            className="h-[130px] w-auto object-contain pointer-events-none select-none"
+                            draggable={false}
+                            onContextMenu={(e) => e.preventDefault()}
+                          />
+                          <ArrowUpRight size={24} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300 pointer-events-none" />
+                        </a>
+                      </div>
+                    )}
+                    </div>
+                  </div>
+                  {/* Mobile Buttons */}
+                  <div className="flex md:hidden items-center justify-between w-full px-[12.5pt] mt-8">
+                    <button
+                      onClick={() => setTranscriptPage((prev) => (prev === 0 ? transcriptLevels.length - 1 : prev - 1))}
+                      className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] flex shrink-0 transition-all hover:scale-105"
+                      aria-label="Previous transcript"
+                    >
+                      <ChevronLeft size={24} />
+                    </button>
+                    <button
+                      onClick={() => setTranscriptPage((prev) => (prev >= transcriptLevels.length - 1 ? 0 : prev + 1))}
+                      className="p-2 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] flex shrink-0 transition-all hover:scale-105"
+                      aria-label="Next transcript"
+                    >
+                      <ChevronRight size={24} />
+                    </button>
+                  </div>
+                </div>
+                
+                {/* Image Section (70%) */}
+                <div className="w-full md:w-[70%] min-h-[306px] order-1 md:order-2">
+                  <div key={transcriptPage} className="w-full h-full flex justify-center items-start">
+                    {transcriptPage === 0 && <ElementarySchoolTable />}
+                    {transcriptPage === 1 && <MiddleSchoolTable />}
+                    {transcriptPage === 2 && <HighSchoolTable />}
+                    {transcriptPage === 3 && <TranscriptTable />}
+                  </div>
+                </div>
+              </div>
+
+                {/* Desktop Buttons */}
                 <button
                   onClick={() => setTranscriptPage((prev) => (prev >= transcriptLevels.length - 1 ? 0 : prev + 1))}
-                  className="p-2 md:p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] flex shrink-0 transition-all hover:scale-105"
+                  className="hidden md:flex shrink-0 mt-[120pt] p-3 rounded-full bg-[#FFFFFF] shadow-md text-[#5B6572] hover:text-[#222222] transition-all scale-[0.85] hover:scale-100 z-10"
                   aria-label="Next transcript"
                 >
-                  <ChevronRight size={24} />
+                  <ChevronRight size={36} />
                 </button>
-              </div>
-              
-              <div className="overflow-hidden min-h-[400px]">
-                <div key={transcriptPage}>
-                  {transcriptPage === 0 && <HighSchoolTable />}
-                  {transcriptPage === 1 && <TranscriptTable />}
-                  {transcriptPage === 2 && <SixSigmaTable />}
-                </div>
               </div>
             </div>
           </div>
 
           
           
-          <div className="relative w-full overflow-hidden flex py-8 mt-12 mb-12">
+          <div className="relative w-full overflow-hidden flex pt-[50pt] pb-[15pt] mt-0 mb-0">
             <style dangerouslySetInnerHTML={{__html: `
               @keyframes marquee-reverse {
                 0% { transform: translateX(-50%); }
@@ -899,40 +1167,55 @@ function App() {
               }
             `}} />
             <div 
-              className={`flex gap-8 px-4 animate-marquee-reverse min-w-max group cursor-pointer`}
+              className={`flex gap-[30pt] px-4 animate-marquee-reverse min-w-max group cursor-pointer`}
               style={{ animationPlayState: isCarouselPaused ? 'paused' : 'running' }}
               onClick={() => setIsCarouselPaused(!isCarouselPaused)}
             >
               {[...Array(2)].map((_, i) => (
-                <div key={i} className="flex gap-8 min-w-max items-start">
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                <div key={i} className="flex gap-[30pt] min-w-max items-start">
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
                     <FlipbookCard 
                       category="Kegiatan"
-                      title="CHARACTER BUILDING KE-20"
+                      title={<>CHARACTER BUILDING<br />KE-20</>}
                       content="Kegiatan Character Building ke-20 untuk pembentukan karakter."
                       darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/CB%20(1)_page-0001.jpg?raw=true"
                       customIcon={<ArrowDownRight size={24} />}
+                      disableFlip={true}
+                      lightMode={true}
                     />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
                     <FlipbookCard 
                       category="Kegiatan"
                       title="LKMM TERABUMI 2021"
                       content="Latihan Keterampilan Manajemen Mahasiswa (LKMM) Tingkat Dasar."
                       darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/LKMM.png?raw=true"
                       customIcon={<ArrowDownRight size={24} />}
+                      disableFlip={true}
+                      lightMode={true}
                     />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
                     <FlipbookCard 
                       category="Kunjungan Industri"
                       title="PT DSV Solutions Indonesia"
                       content="Mahasiswa tahun kedua Program Studi D3 dan D4 Logistik Bisnis melaksanakan kunjungan industri pada 9 Juni 2023 ke PT. DSV Solutions Indonesia (Pondok Ungu Site), Kota Bekasi, Jawa Barat."
                       darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/KI.png?raw=true"
                       customIcon={<ArrowDownRight size={24} />}
+                      disableFlip={true}
+                      lightMode={true}
                     />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px] shrink-0">
+                    <div className="w-full h-[290px] rounded-[2rem] border-2 border-[#5B6572]/20 overflow-hidden shadow-sm bg-[#F4F3F0] relative">
+                      <img 
+                        src="https://github.com/dhnaath/Resources-Portofolio/blob/main/IMG_1537.jpg?raw=true" 
+                        alt="Kegiatan" 
+                        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} 
+                      />
+                    </div>
+                  </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
                     <FlipbookCard 
                       category="Proyek Logistik I"
                       title="Business Process"
@@ -944,16 +1227,17 @@ function App() {
                       customIcon={<ArrowDownRight size={24} />}
                     />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
                     <FlipbookCard 
                       category="Proyek Logistik II"
                       title="Design Thinking"
                       content="Tugas besar berbentuk 𝗗𝗲𝘀𝗶𝗴𝗻 𝗧𝗵𝗶𝗻𝗸𝗶𝗻𝗴 untuk memenuhi syarat kelulusan mata kuliah 𝗣𝗿𝗼𝘆𝗲𝗸 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸 𝟮 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟯 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-                      darkImage="https://media.licdn.com/dms/image/v2/D562DAQGfDCaKyTBnxg/profile-treasury-image-shrink_1280_1280/profile-treasury-image-shrink_1280_1280/0/1708894056035?e=1783872000&v=beta&t=FMeYzo6FTMaXfSZAXu5_nb4L_nozmOB4LeCjJ1i8zU4"
+                      darkContent="Tugas Design Thinking Logistik"
+                      darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/Poster%20Proyek%20II.jpg?raw=true"
                       customIcon={<ArrowDownRight size={24} />}
                     />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
                     <FlipbookCard 
                       category="Proyek Logistik III"
                       title="House of Quality"
@@ -966,7 +1250,7 @@ function App() {
                       customIcon={<ArrowDownRight size={24} />}
                     />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
                     <FlipbookCard 
                       category="Seminar"
                       title="International Joint Effort Seminar Programme on Logistics and Supply Chain"
@@ -978,37 +1262,162 @@ function App() {
                       customIcon={<ArrowDownRight size={24} />}
                     />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
+                    <FlipbookCard 
+                      category="Seminar"
+                      title="Presenter"
+                      content="Penghargaan untuk Presenter pada acara Seminar Internasional."
+                      darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/APPRECIATION%20CERT_page-0001.jpg?raw=true"
+                      customIcon={<ArrowDownRight size={24} />}
+                      disableFlip={true}
+                      lightMode={true}
+                    />
+                  </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
                     <FlipbookCard 
                       category="Seminar"
                       title="Awardee for Favorite Judges"
                       content="Penghargaan untuk Favorite Judges pada acara Seminar Internasional."
-                      darkImages={[
-                        "https://github.com/dhnaath/Resources-Portofolio/blob/main/APPRECIATION%20CERT_page-0001.jpg?raw=true",
-                        "https://github.com/dhnaath/Resources-Portofolio/blob/main/FAVJUDG.png?raw=true"
-                      ]}
-                      customIcon={<ArrowDownRight size={24} />}
+                      darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/FAVJUDG.png?raw=true"
+                      disableFlip={true}
+                      lightMode={true}
                     />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
                     <FlipbookCard 
                       category="Kerja Praktik I"
                       title="Rencana Penelitian"
                       content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟭 dan 𝗟𝗮𝗽𝗼𝗿𝗮𝗻 𝗔𝗸𝗵𝗶𝗿 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟳 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
                       darkContent="Optimalisasi Persediaan Toyota Motor Oil (TMO) Engine Oil pada Gudang Suku Cadang Toyota Auto2000 Cabang Pasteur Menggunakan Metode EOQ Deterministik dan Least Unit Cost"
-                      customIcon={<div className="flex items-center gap-2"><FileText size={24} /><ArrowDownRight size={24} /></div>}
+                      topLeftIcon={<FileText size={24} />}
+                      customIcon={<ArrowDownRight size={24} />}
                       link="https://drive.google.com/file/d/1ZpdHl4ABP2CNCyaZlSs19R5ngxjG09Ke/view?usp=drive_link"
                     />
                   </div>
-                  <div className="w-[85vw] sm:w-[500px] md:w-[560px]">
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
                     <FlipbookCard 
                       category="Kerja Praktik II"
                       title="Skripsi"
                       content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟮 dan 𝗦𝗸𝗿𝗶𝗽𝘀𝗶 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟴 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
                       darkContent="Analisis Kualitas Pelayanan PT. Pos Indonesia (Persero) Cabang KPRK Sintang 78600 untuk Meningkatkan Kepuasan Pelanggan dengan Integrasi ServQual dan IPA"
-                      customIcon={<div className="flex items-center gap-2"><FileText size={24} /><ArrowDownRight size={24} /></div>}
+                      topLeftIcon={<FileText size={24} />}
+                      customIcon={<ArrowDownRight size={24} />}
                       link="https://drive.google.com/file/d/1ACG-GMGG3btYs0Vz0ZdQHzoa4eNDucmU/view?usp=drive_link"
                     />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="relative w-full overflow-hidden flex pt-[15pt] pb-[50pt]">
+            <style dangerouslySetInnerHTML={{__html: `
+              .animate-marquee-78 {
+                animation: marquee 78s linear infinite;
+              }
+            `}} />
+            <div 
+              className={`flex gap-[30pt] px-4 animate-marquee-78 min-w-max group cursor-pointer`}
+              style={{ animationPlayState: isCarouselPaused ? 'paused' : 'running' }}
+              onClick={() => setIsCarouselPaused(!isCarouselPaused)}
+            >
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="flex gap-[30pt] min-w-max items-start">
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
+                    <FlipbookCard 
+                      category="Perwakilan"
+                      title="DOKTER KECIL UKS"
+                      content="SDN 01 LANJAK"
+                      darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/ChatGPT%20Image%2021%20Jul%202026,%2014.52.51.png?raw=true"
+                      customIcon={<ArrowDownRight size={24} />}
+                      disableFlip={true}
+                    />
+                  </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px] shrink-0">
+                    <div className="w-full h-[290px] rounded-[2rem] border-2 border-[#5B6572]/20 overflow-hidden shadow-sm bg-white relative">
+                      <img 
+                        src="https://github.com/dhnaath/Resources-Portofolio/blob/main/WhatsApp%20Image%202026-07-21%20at%2014.15.33.jpeg?raw=true" 
+                        alt="Penghargaan" 
+                        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} 
+                      />
+                    </div>
+                  </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
+                    <FlipbookCard 
+                      category="OLIMPIADE SAINS NASIONAL"
+                      title="OSN SD/MI 2013"
+                      content="Peserta Olimpiade Sains Nasional SD/MI Tahun 2013."
+                      darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/ChatGPT%20Image%2023%20Jul%202026,%2011.25.26.png?raw=true"
+                      imageClassName="scale-90"
+                      disableFlip={true}
+                      lightMode={true}
+                    />
+                  </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px] shrink-0">
+                    <div className="w-full h-[290px] rounded-[2rem] border-2 border-[#5B6572]/20 overflow-hidden shadow-sm bg-white relative">
+                      <img 
+                        src="https://github.com/dhnaath/Resources-Portofolio/blob/main/Desain%20tanpa%20judul%20(4).png?raw=true" 
+                        alt="Sertifikat" 
+                        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} 
+                      />
+                    </div>
+                  </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
+                    <FlipbookCard 
+                      category="OLIMPIADE SAINS NASIONAL"
+                      title="OSN SD/MI 2013"
+                      content="Peserta Olimpiade Sains Nasional SD/MI Tahun 2013."
+                      darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/osn%20baru.png?raw=true"
+                      disableFlip={true}
+                      lightMode={true}
+                    />
+                  </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
+                    <FlipbookCard 
+                      category="JAMBORE NASIONAL"
+                      title="Jamnas X-2016"
+                      content="Peserta Jambore Nasional X Tahun 2016."
+                      darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/Desain%20tanpa%20judul%20(3).png?raw=true"
+                      disableFlip={true}
+                      lightMode={true}
+                    />
+                  </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px] shrink-0">
+                    <div className="w-full h-[290px] rounded-[2rem] border-2 border-[#5B6572]/20 overflow-hidden shadow-sm bg-white relative">
+                      <img 
+                        src="https://github.com/dhnaath/Resources-Portofolio/blob/main/Pramuka%20penggalang%20Dari%20berbagai%20kwartir%20ranting%20%20se-Kab.kapuas%20Hulu%20%20Melakukan%20Latihan%20Pemantap.jpg?raw=true" 
+                        alt="Pramuka Penggalang" 
+                        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} 
+                      />
+                    </div>
+                  </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
+                    <FlipbookCard 
+                      category="KOMPETISI DEBAT"
+                      title={<>English Festival and<br />National Schools Debating<br />Championship 2019</>}
+                      content="Peserta English Festival and National Schools Debating Championship 2019. Penyelenggara: FKIP UNTAN dan MGMP Bahasa Inggris Kota Pontianak."
+                      darkContent={<div className="font-serif font-bold text-3xl leading-tight text-[#222222] not-italic"><span className="block mb-2">FKIP UNTAN</span><span className="block mb-2">MGMP Bahasa Inggris</span><span className="block">Kota Pontianak</span></div>}
+                      disableFlip={true}
+                      lightMode={true}
+                    />
+                  </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px] shrink-0">
+                    <div className="w-full h-[290px] rounded-[2rem] border-2 border-[#5B6572]/20 overflow-hidden shadow-sm bg-[#F4F3F0] relative">
+                      <img 
+                        src="https://github.com/dhnaath/Resources-Portofolio/blob/main/ChatGPT%20Image%2023%20Jul%202026,%2011.29.33.png?raw=true" 
+                        alt="Foto Kegiatan" 
+                        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} 
+                      />
+                    </div>
+                  </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px] shrink-0">
+                    <div className="w-full h-[290px] rounded-[2rem] border-2 border-[#5B6572]/20 overflow-hidden shadow-sm bg-white relative">
+                      <img 
+                        src="https://github.com/dhnaath/Resources-Portofolio/blob/main/IMG_1614.JPG?raw=true" 
+                        alt="Kegiatan Baru" 
+                        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} 
+                      />
+                    </div>
                   </div>
                 </div>
               ))}

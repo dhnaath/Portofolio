@@ -7,18 +7,24 @@ function FloatingDocumentCard({
   pdfUrl,
   handleHeight = "180px",
   handleWidth = "72px",
+  cardWidth = "432px",
+  cardHeight = "252px",
   icon,
   bgColor = "#222222",
   customBack,
+  customFront,
   handleContent
 }: { 
   title: string, 
   pdfUrl?: string,
   handleHeight?: string,
   handleWidth?: string,
+  cardWidth?: string,
+  cardHeight?: string,
   icon?: React.ReactNode,
   bgColor?: string,
   customBack?: React.ReactNode,
+  customFront?: React.ReactNode,
   handleContent?: React.ReactNode
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -53,8 +59,8 @@ function FloatingDocumentCard({
           <motion.div 
             className="relative z-10 cursor-pointer"
             style={{
-              width: "432px",
-              height: "252px",
+              width: cardWidth,
+              height: cardHeight,
               transformStyle: "preserve-3d",
               pointerEvents: isExpanded ? "auto" : "none"
             }}
@@ -77,31 +83,35 @@ function FloatingDocumentCard({
           >
             {/* Front of Card (White) */}
             <div 
-              className="absolute inset-0 rounded-lg shadow-2xl flex items-center justify-center border" style={{ backfaceVisibility: 'hidden', backgroundColor: bgColor, borderColor: bgColor }}
+              className="absolute inset-0 rounded-lg shadow-2xl flex items-center justify-center border" style={{ backfaceVisibility: 'hidden', backgroundColor: bgColor === "#222222" ? "#FFFFFF" : bgColor, borderColor: bgColor === "#222222" ? "#FFFFFF" : bgColor }}
               
             >
-              <div className="flex flex-col items-center gap-6">
-                {icon ? icon : <FileText size={72} className="text-[#5B6572]/70" />}
-                <span className="text-[#FFFFFF] font-semibold tracking-wider text-xl italic">{title}</span>
-              </div>
+              {customFront ? customFront : (
+                <div className="flex flex-col items-center gap-6">
+                  {icon ? icon : <FileText size={72} className="text-[#5B6572]/70" />}
+                  <span className={`font-semibold tracking-wider text-xl italic ${bgColor === "#222222" ? "text-[#222222]" : "text-[#FFFFFF]"}`}>{title}</span>
+                </div>
+              )}
             </div>
             
             {/* Back of Card (Click to open) */}
             <div 
-              className="absolute inset-0 rounded-lg shadow-2xl flex flex-col items-center justify-center border p-4 text-center" style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden', backgroundColor: bgColor, borderColor: bgColor }}
+              className="absolute inset-0 rounded-lg shadow-2xl flex flex-col items-center justify-center border p-4 text-center" style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden', backgroundColor: bgColor === "#222222" ? "#FFFFFF" : bgColor, borderColor: bgColor === "#222222" ? "#FFFFFF" : bgColor }}
               
             >
-               <div className="flex items-center gap-2 text-[#F4F3F0] text-lg font-semibold uppercase tracking-widest px-6 py-3 border border-[#5B6572] rounded-full hover:bg-[#222222] transition-colors">
-                 <span>Click to open</span>
-                 <ExternalLink size={20} />
-               </div>
+               {customBack ? customBack : (
+                 <div className={`flex items-center gap-2 text-lg font-semibold uppercase tracking-widest px-6 py-3 border rounded-full transition-colors ${bgColor === "#222222" ? "text-[#222222] border-[#222222] hover:bg-[#F4F3F0]" : "text-[#F4F3F0] border-[#F4F3F0] hover:bg-[#222222] hover:text-[#FFFFFF] hover:border-[#222222]"}`}>
+                   <span>Click to open</span>
+                   <ExternalLink size={20} />
+                 </div>
+               )}
             </div>
           </motion.div>
 
           {/* The handle (visible when collapsed) */}
           <motion.div 
             onClick={() => { if (!isExpanded) setIsExpanded(true); }}
-            className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer border border-l-0 shadow-[4px_0_15px_rgba(0,0,0,0.5)] z-20 origin-left" style={{ borderTopRightRadius: "45px", borderBottomRightRadius: "45px", width: handleWidth, height: handleHeight, backgroundColor: bgColor, borderColor: bgColor }}
+            className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer border border-l-0 shadow-[4px_0_15px_rgba(0,0,0,0.5)] z-20 origin-left pointer-events-auto" style={{ borderTopRightRadius: "45px", borderBottomRightRadius: "45px", width: handleWidth, height: handleHeight, backgroundColor: bgColor, borderColor: bgColor }}
             
             animate={{ 
               opacity: isExpanded ? 0 : 1, 
@@ -176,8 +186,8 @@ const LinkedInBadge = memo(function LinkedInBadge() {
 
 export function FloatingDocuments() {
   return (
-    <div className="fixed left-0 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-[15pt]">
-      <div className="translate-y-[67pt]">
+    <div className="fixed left-0 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-[15pt] pointer-events-none">
+      <div className="translate-y-[57pt]">
         <FloatingDocumentCard 
           title="Curriculum Vitae" 
           pdfUrl="#"
@@ -185,7 +195,7 @@ export function FloatingDocuments() {
           icon={<img src="https://github.com/dhnaath/Resources-Portofolio/blob/main/cv_1810684.png?raw=true" alt="CV Icon" className="w-[126px] h-[126px] object-contain" />}
         />
       </div>
-      <div className="translate-y-[25pt]">
+      <div className="translate-y-[15pt]">
         <FloatingDocumentCard 
           title="Cover Letter" 
           pdfUrl="#"
@@ -197,8 +207,10 @@ export function FloatingDocuments() {
           title="LinkedIn" 
           pdfUrl="https://linkedin.com/in/dhnaath"
           handleHeight="80px"
+          cardWidth="248px"
+          cardHeight="145px"
           bgColor="#0a66c2"
-          icon={<Linkedin size={72} className="text-[#FFFFFF]/70" />}
+          customFront={<div className="flex w-full h-full items-center justify-center p-8"><img src="https://github.com/dhnaath/Resources-Portofolio/blob/main/Linkedin-logo-white-png-wordmark-icon-horizontal-900x233.png?raw=true" alt="LinkedIn Logo" className="w-[158px] h-auto object-contain drop-shadow-md" /></div>}
           customBack={<LinkedInBadge />}
           handleContent={<div className="flex w-full h-full items-center justify-center -translate-x-[4px]"><img src="https://github.com/dhnaath/Resources-Portofolio/blob/main/linkedin-130_1024.png?raw=true" alt="LinkedIn" className="w-[42px] h-auto object-contain" style={{ transform: "rotate(0deg)" }} /></div>}
         />

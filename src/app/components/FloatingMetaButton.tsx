@@ -21,7 +21,7 @@ export function FloatingMetaButton() {
   return (
     <div 
       ref={containerRef}
-      className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex items-center"
+      className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex items-center pointer-events-none"
       
     >
       <motion.div
@@ -33,7 +33,7 @@ export function FloatingMetaButton() {
         {/* The 3-dot handle (visible when collapsed) */}
         <motion.div 
           onClick={() => { if (!isExpanded) setIsExpanded(true); }}
-          className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer shadow-[-4px_0_15px_rgba(0,0,0,0.1)] z-20 origin-right"
+          className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center cursor-pointer shadow-[-4px_0_15px_rgba(0,0,0,0.1)] z-20 origin-right pointer-events-auto"
           style={{
             borderTopLeftRadius: "30px",
             borderBottomLeftRadius: "30px",

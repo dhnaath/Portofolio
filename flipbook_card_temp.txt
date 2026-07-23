@@ -1,0 +1,276 @@
+function FlipbookCard({ category, title, content, darkContent, darkImage, darkImages, imageClassName, link, customIcon, topLeftIcon, disableFlip, disableSlide, lightMode }: { category: string, title: React.ReactNode, content: React.ReactNode, darkContent?: React.ReactNode, darkImage?: string, darkImages?: string[], imageClassName?: string, link?: string, customIcon?: React.ReactNode, topLeftIcon?: React.ReactNode, disableFlip?: boolean, disableSlide?: boolean, lightMode?: boolean }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [phase, setPhase] = useState<'idle' | 'spill' | 'text' | 'revert'>('idle');
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [currentDirection, setCurrentDirection] = useState<'left' | 'right' | 'up' | 'down'>('left');
+  const [revertDirection, setRevertDirection] = useState<'left' | 'right' | 'up' | 'down'>('right');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const darkImagesLength = darkImages?.length || 0;
+
+  useEffect(() => {
+    if (disableSlide) return;
+    
+    let isMounted = true;
+    
+    const initialDelay = Math.random() * 2000;
+    const directions: ('left' | 'right' | 'up' | 'down')[] = ['left', 'right', 'up', 'down'];
+    
+    const run = async () => {
+      await new Promise(r => setTimeout(r, initialDelay));
+      while(isMounted) {
+        setPhase('idle');
+        setCurrentImageIndex(0);
+        // Randomize direction before each animation cycle
+        setCurrentDirection(directions[Math.floor(Math.random() * directions.length)]);
+        setRevertDirection(directions[Math.floor(Math.random() * directions.length)]);
+
+        // Wait in idle for 5.5s
+        await new Promise(r => setTimeout(r, 5500));
+        if (!isMounted) break;
+        
+        setPhase('spill');
+        // Slide animation duration
+        await new Promise(r => setTimeout(r, 1200));
+        if (!isMounted) break;
+        
+        setPhase('text');
+        
+        if (darkImagesLength > 0) {
+          // Hold first image for 6 seconds
+          await new Promise(r => setTimeout(r, 6000));
+          if (!isMounted) break;
+
+          for (let i = 1; i < darkImagesLength; i++) {
+            setCurrentImageIndex(i);
+            // Hold subsequent images for 6 seconds as well
+            await new Promise(r => setTimeout(r, 6000));
+            if (!isMounted) break;
+          }
+        } else {
+          // Hold short paragraph for 6 seconds
+          await new Promise(r => setTimeout(r, 6000));
+        }
+
+        if (!isMounted) break;
+        
+        setPhase('revert');
+        // Revert animation duration
+        await new Promise(r => setTimeout(r, 1000));
+      }
+    };
+    run();
+    return () => { isMounted = false; };
+  }, [darkImagesLength]);
+
+  const getInitialPosition = () => {
+    switch(currentDirection) {
+      case 'left': return { x: '-100%', y: '0%' };
+      case 'right': return { x: '100%', y: '0%' };
+      case 'up': return { x: '0%', y: '100%' };
+      case 'down': return { x: '0%', y: '-100%' };
+    }
+  };
+
+  const getRevertPosition = () => {
+    switch(revertDirection) {
+      case 'left': return { x: '-100%', y: '0%' };
+      case 'right': return { x: '100%', y: '0%' };
+      case 'up': return { x: '0%', y: '100%' };
+      case 'down': return { x: '0%', y: '-100%' };
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5; // -0.5 to 0.5
+    setMousePos({ x, y });
+  };
+
+  return (
+    <motion.div 
+      className={`relative w-full h-[306px] [perspective:1500px] ${!disableFlip ? 'cursor-pointer' : ''}`}
+      onClick={() => {
+        if (!disableFlip) setIsFlipped(!isFlipped);
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setMousePos({ x: 0, y: 0 });
+      }}
+      onMouseMove={handleMouseMove}
+      animate={{
+        rotateX: isHovered && !isFlipped ? mousePos.y * -20 : 0,
+        rotateY: isHovered && !isFlipped ? mousePos.x * 20 : 0,
+      }}
+      transition={{
+        type: "spring",
+        damping: 30,
+        stiffness: 200,
+        mass: 0.5
+      }}
+      style={{ transformStyle: "preserve-3d" }}
+    >
+      <div 
+        className={`w-full h-full transition-all duration-700 [transform-style:preserve-3d] ${
+          isFlipped ? '[transform:rotateY(180deg)]' : ''
+        }`}
+      >
+        {/* Front Face (Cover) */}
+        <div 
+          className="absolute w-full h-full bg-[#FFFFFF] rounded-[2rem] border-2 border-[#5B6572]/20 transition-shadow duration-300 p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] overflow-hidden"
+          style={{
+            boxShadow: isHovered && !isFlipped
+              ? `${-mousePos.x * 40}px ${-mousePos.y * 40}px 40px rgba(0,0,0,0.15)`
+              : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+          }}
+        >
+          {/* Sliding Background Element */}
+          <motion.div 
+            className={`absolute inset-0 z-10 ${(lightMode || darkImage || (darkImages && darkImages.length > 0)) ? 'bg-[#FFFFFF]' : 'bg-[#222222]'}`}
+            initial={false}
+            animate={{ 
+              x: phase === 'spill' || phase === 'text' ? '0%' : (phase === 'revert' ? getRevertPosition().x : getInitialPosition().x),
+              y: phase === 'spill' || phase === 'text' ? '0%' : (phase === 'revert' ? getRevertPosition().y : getInitialPosition().y),
+            }}
+            transition={{ 
+              duration: phase === 'idle' ? 0 : 1.2, ease: [0.76, 0, 0.24, 1]
+            }}
+          />
+
+          {/* Hidden Short Paragraph / Image */}
+          <motion.div 
+            className={`absolute z-20 ${lightMode ? 'text-[#222222]' : 'text-[#FFFFFF]'} text-center flex flex-col justify-center items-center ${(darkImage || darkImages) ? 'inset-0 rounded-[2rem] overflow-hidden' : 'p-8'}`}
+            initial={false}
+            animate={{ 
+              opacity: phase === 'text' ? 1 : 0,
+              y: phase === 'text' ? 0 : 20,
+              scale: phase === 'text' ? 1 : 0.95
+            }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            style={{ pointerEvents: phase === 'text' ? 'auto' : 'none' }}
+          >
+            {darkImages && darkImages.length > 0 ? (
+              darkImages.map((img, idx) => (
+                <motion.img 
+                  key={idx}
+                  src={img} 
+                  alt={`${title} - ${idx}`}
+                  className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} 
+                  initial={false}
+                  animate={{
+                     x: currentImageIndex === idx ? '0%' : (idx < currentImageIndex ? '-100%' : '100%'),
+                     opacity: currentImageIndex === idx ? 1 : (idx < currentImageIndex ? 0.5 : 0)
+                  }}
+                  transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+                />
+              ))
+            ) : darkImage ? (
+              <div className={`absolute inset-0 flex items-center justify-center ${imageClassName?.includes('scale') ? 'bg-white' : ''}`}>
+                <img src={darkImage} alt={title as string} className={`w-full h-full object-cover ${imageClassName || ''} pointer-events-none select-none`} draggable={false} onContextMenu={(e) => e.preventDefault()} />
+              </div>
+            ) : darkContent ? (
+              <div className="w-full">
+                {darkContent}
+              </div>
+            ) : (
+              <p className="font-cambria text-lg italic leading-relaxed">
+                "Terkadang apa yang terlihat di luar, menyembunyikan sesuatu yang lebih dalam."
+              </p>
+            )}
+          </motion.div>
+
+          <motion.div 
+            className="relative z-20 text-xs font-semibold text-[#5B6572]/70 uppercase tracking-widest mb-4 font-sans origin-center"
+            animate={
+              phase === 'spill' || phase === 'text' ? {
+                scale: 0.95,
+                opacity: 0,
+                filter: "blur(12px)",
+                x: currentDirection === 'left' ? '50%' : currentDirection === 'right' ? '-50%' : '0%',
+                y: currentDirection === 'up' ? '-50%' : currentDirection === 'down' ? '50%' : '0%',
+              } : {
+                scale: 1,
+                opacity: 1,
+                filter: "blur(0px)",
+                x: '0%',
+                y: '0%',
+              }
+            }
+            transition={
+              phase === 'spill' ? {
+                duration: 1.2,
+                ease: [0.76, 0, 0.24, 1]
+              } : {
+                duration: 0.8,
+                ease: "easeOut"
+              }
+            }
+          >
+            {category}
+          </motion.div>
+          <motion.div 
+            className="relative z-20 text-2xl font-bold text-[#222222] leading-tight mb-8 mt-[15pt] font-serif origin-center"
+            animate={
+              phase === 'spill' || phase === 'text' ? {
+                scale: 0.95,
+                opacity: 0,
+                filter: "blur(12px)",
+                x: currentDirection === 'left' ? '50%' : currentDirection === 'right' ? '-50%' : '0%',
+                y: currentDirection === 'up' ? '-50%' : currentDirection === 'down' ? '50%' : '0%',
+              } : {
+                scale: 1,
+                opacity: 1,
+                filter: "blur(0px)",
+                x: '0%',
+                y: '0%',
+              }
+            }
+            transition={
+              phase === 'spill' ? {
+                duration: 1.2,
+                ease: [0.76, 0, 0.24, 1]
+              } : {
+                duration: 0.8,
+                ease: "easeOut"
+              }
+            }
+          >
+            {title}
+          </motion.div>
+        </div>
+
+        {/* Back Face (Inside Page) */}
+        <div className="absolute w-full h-full bg-[#222222] rounded-[2rem] shadow-lg p-8 flex flex-col justify-center items-center text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          {topLeftIcon && (
+            <div className="absolute top-8 left-8 text-[#5B6572] z-30 pointer-events-none">
+              {topLeftIcon}
+            </div>
+          )}
+          <div className="text-xs font-semibold text-[#5B6572]/70 uppercase tracking-wider mb-6 pb-4 border-b border-[#222222] w-full font-sans italic">{title}</div>
+          <div className="text-base md:text-lg font-medium text-[#FFFFFF] leading-snug font-cambria">
+            {content}
+          </div>
+          <a
+            href={link || "#"}
+            target={link ? "_blank" : undefined}
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!link) {
+                e.preventDefault();
+              }
+            }}
+            className="absolute bottom-8 right-8 text-[#5B6572] hover:text-[#FFFFFF] transition-colors z-30"
+          >
+            {customIcon || (link ? <ExternalLink size={24} /> : null)}
+          </a>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+import { ExperienceCard } from "./components/ExperienceCard";

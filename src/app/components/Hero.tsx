@@ -1,6 +1,4 @@
 import { motion } from "motion/react";
-import { useState } from "react";
-import { Header } from "./Header";
 
 export function Hero({ lang = 'ID' }: { lang?: 'ID' | 'EN' }) {
   return (
@@ -18,7 +16,6 @@ export function Hero({ lang = 'ID' }: { lang?: 'ID' | 'EN' }) {
             className="w-full h-full object-cover object-top"
           />
         </motion.div>
-
         <motion.h1 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -49,10 +46,6 @@ export function Hero({ lang = 'ID' }: { lang?: 'ID' | 'EN' }) {
             )}
           </p>
         </motion.div>
-        
-        <div className="mt-[25pt] w-full">
-          <Header />
-        </div>
       </div>
     </section>
   );

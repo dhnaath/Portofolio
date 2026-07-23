@@ -1,6 +1,4 @@
-@import './fonts.css';
-@import './tailwind.css';
-@import './theme.css';
+@import "tailwindcss";
 
 @theme {
   --color-alabaster: #F4F3F0;

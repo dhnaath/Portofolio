@@ -303,24 +303,20 @@ function App() {
     [
       { title: "Desain 1", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/454416991_1194139031788901_3721232300998524358_n.jpg?raw=true", rotation: "-rotate-3", delay: "0.2s" },
       { title: "Desain 3", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/454491791_1206186407068031_8930531019005467898_n.jpg?raw=true", rotation: "rotate-1", delay: "0.6s" },
-    ],
-    [
       { title: "Desain 2", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/454363865_3318337168463084_4793837023871862832_n.jpg?raw=true", rotation: "rotate-2", delay: "0.4s" },
     ],
     [
       { title: "Financial Model", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/Desain%20tanpa%20judul.png?raw=true", rotation: "-rotate-3", delay: "0.2s" },
-    ],
-    [
       { title: "Pitch Deck", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/Dhia%20Najmi%20Athallah.png?raw=true", rotation: "-rotate-3", delay: "0.4s" },
     ],
     [
       { title: "Brand Identity", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/Desain%20Tanpa%20Judul%20-%202.jpg?raw=true", rotation: "rotate-3", delay: "0.2s" },
     ],
     [
-      { title: "Market Research", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/Survei%20Kepuasan%20Pelanggan%20Berhadiah.png?raw=true", rotation: "rotate-2", delay: "0.4s" },
+      { title: "Project Design", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/085161629923%20(WA)%20-%204.png?raw=true", rotation: "rotate-1", delay: "0.2s" },
     ],
     [
-      { title: "Project Design", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/085161629923%20(WA)%20-%204.png?raw=true", rotation: "rotate-1", delay: "0.2s" },
+      { title: "Market Research", image: "https://github.com/dhnaath/Resources-Portofolio/blob/main/Survei%20Kepuasan%20Pelanggan%20Berhadiah.png?raw=true", rotation: "rotate-2", delay: "0.4s" },
     ]
   ];
 
@@ -338,6 +334,7 @@ function App() {
     company: "PosIND\nPT. Pos Indonesia (Persero)",
     companyLogo: "https://github.com/dhnaath/Resources-Portofolio/blob/main/7.png?raw=true",
     description: "BUMN; Danantara; Administrasi; Operasional; Marketing",
+    tagColor: "#E64A19",
     positions: [
       {
         title: "Assistant Branch Manager",
@@ -399,6 +396,7 @@ function App() {
     company: "KopnusPos\nKSP Nusantara",
     companyLogo: "https://github.com/dhnaath/Resources-Portofolio/blob/main/5.png?raw=true",
     description: "Keuangan; Koperasi; Marketing; Sales; Pembiayaan Pensiun",
+    tagColor: "#F57C00",
     positions: [
       {
         title: "Agen Oren by KOPNUS",
@@ -458,6 +456,7 @@ function App() {
       employmentTypeEn: "Independent, Commission-Based, No Basic Salary (Freelancer)",
       description: "Sourcing Platform; Global Partnership; RFQ; B2B; Freelance",
       companyLogo: "https://github.com/dhnaath/Resources-Portofolio/blob/main/4.png?raw=true",
+      tagColor: "#1976D2",
       achievements: [
         "Mencari dan menjaring calon pembeli lokal yang membutuhkan pasokan barang atau mesin industri dari China.",
         "Mengumpulkan dan memverifikasi spesifikasi kebutuhan barang serta detail kontak pembeli guna menyusun dokumen Request for Quotation (RFQ) yang akurat sebelum diajukan ke platform.",
@@ -487,6 +486,7 @@ function App() {
       employmentTypeEn: "Internship",
       description: "Pergudangan; Persediaan; Suku Cadang; Otomotif; Dealer",
       companyLogo: "https://github.com/dhnaath/Resources-Portofolio/blob/main/1.png?raw=true",
+      tagColor: "#D32F2F",
       achievements: [
         "Mengoptimalkan penataan rak penyimpanan suku cadang berdasarkan kode standar agar alur kerja gudang jadi lebih rapi dan efisien.",
         "Mengelola keakuratan data stok di gudang lewat stock opname berkala dan langsung memperbarui datanya di sistem Warehouse Management System (WMS).",
@@ -521,6 +521,7 @@ function App() {
       employmentTypeEn: "Unpaid Remote Internship",
       description: "Mentorship; Pelatihan; Pengembangan; Rancang Program",
       companyLogo: "https://github.com/dhnaath/Resources-Portofolio/blob/main/6.png?raw=true",
+      tagColor: "#1976D2",
       achievements: [
         "Melakukan riset pasar dan audiens untuk mendukung posisi perusahaan, penyampaian pesan dan tujuan, dan pemilihan program kegiatan.",
         "Mengembangkan strategi pemasaran untuk rencana kegiatan program berdasarkan temuan riset dan hasil diskusi tim.",
@@ -549,6 +550,7 @@ function App() {
       employmentTypeEn: "Independent, Commission-Based, No Basic Salary (Freelancer)",
       description: "Keuangan; Asuransi Jiwa; Asuransi Kesehatan; Takaful Keluarga",
       companyLogo: "https://github.com/dhnaath/Resources-Portofolio/blob/main/2.png?raw=true",
+      tagColor: "#D32F2F",
       achievements: [
         "Menganalisis profil risiko, tujuan keuangan, dan kemampuan premi calon nasabah untuk merancang proposal ilustrasi asuransi (konvensional/syariah) yang sesuai kebutuhan.",
         "Membimbing calon nasabah dalam penyiapan dokumen SPAJ, menjelaskan hak-kewajiban secara transparan, serta mengawal proses pengajuan proposal.",
@@ -580,6 +582,7 @@ function App() {
       employmentTypeEn: "Unpaid Remote Internship",
       description: "Pelatihan; Promosi; Penjualan; Unpaid Internship; Remote",
       companyLogo: "https://github.com/dhnaath/Resources-Portofolio/blob/main/3.png?raw=true",
+      tagColor: "#1976D2",
       achievements: [
         "Melakukan screening awal terhadap resume pelamar, menyaring kandidat potensial (shortlisting), serta mengelola proses tindak lanjut hasil seleksi.",
         "Mengoptimalkan publikasi lowongan kerja (job posting) dan materi promosi rekrutmen secara berkala di berbagai platform profesional seperti LinkedIn dan Glints.",
@@ -618,6 +621,7 @@ function App() {
       employmentType: "Mandiri, Tanpa Jam Operasional dan Wilayah Tetap (Freelancer)",
       employmentTypeEn: "Independent, No Fixed Operating Hours and Area (Freelancer)",
       description: "Transportasi; Jasa Layanan; Kurir-Ojek; Pesan-Antar; Aplikasi",
+      tagColor: "#00B14F",
       achievements: [
         "Melayani transportasi penumpang serta distribusi makanan dan paket barang dengan memastikan keamanan, kebersihan, dan ketepatan waktu hingga ke lokasi tujuan.",
         "Berkoordinasi secara aktif dengan pelanggan, mitra restoran, dan pihak keamanan/parkir demi kelancaran proses ambil-antar pesanan.",
@@ -648,7 +652,8 @@ function App() {
       employmentType: "Mandiri, Berbasis Komisi, Tanpa Gaji, Tanpa Absensi (Freelancer)",
       employmentTypeEn: "Independent, Commission-Based, No Salary, No Attendance (Freelancer)",
       description: "BUMN; Keuangan; Leasing; Pembiayaan Kendaraan; Sales",
-      companyLogo: "https://github.com/dhnaath/Resources-Portofolio/blob/main/Desain%20tanpa%20judul%20(1).png?raw=true",
+      companyLogo: "https://github.com/dhnaath/Resources-Portofolio/blob/main/muf%20baru%20logonya%20yaaa.png?raw=true",
+      tagColor: "#003366",
       achievements: [
         "Memasarkan produk pinjaman dana tunai dengan jaminan BPKB kendaraan, baik untuk roda dua (motor) maupun roda empat (mobil).",
         "Menyesuaikan produk pembiayaan yang akan diajukan agar sejalan dengan kebutuhan serta kemampuan finansial calon klien.",
@@ -782,9 +787,9 @@ function App() {
       <Hero lang={lang} />
 
       {/* Work Experience Section - Reverse Chronological Order (Latest to Earliest) */}
-      <section id="experience" className="pt-[25pt] pb-0 bg-[#F4F3F0]">
+      <section id="experience" className="pt-[15pt] pb-0 bg-[#F4F3F0]">
         <div className="w-full px-[10pt]">
-          <div className="flex flex-col items-center justify-center gap-1 mb-[10pt] opacity-40">
+          <div className="flex flex-col items-center justify-center gap-1 mb-[25pt] opacity-40 -mt-[10pt]">
             <h2 className="text-xl md:text-2xl font-bold text-[#222222]">Working Experiences</h2>
             <p className="text-sm font-cambria text-[#222222] text-center">Professional Journey, Career Path, and Strategic Contributions</p>
           </div>
@@ -806,31 +811,31 @@ function App() {
             >
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="flex gap-[10pt] min-w-max items-start">
-                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
+                  <div className="w-[68vw] sm:w-[calc(304px+136pt)] md:w-[calc(342px+136pt)]">
                     <ExperienceCard {...experiences[6]} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
+                  <div className="w-[68vw] sm:w-[calc(304px+136pt)] md:w-[calc(342px+136pt)]">
                     <ExperienceCard {...experiences[5]} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
+                  <div className="w-[68vw] sm:w-[calc(304px+136pt)] md:w-[calc(342px+136pt)]">
                     <KspNusantaraExperience {...kspNusantaraData} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
+                  <div className="w-[68vw] sm:w-[calc(304px+136pt)] md:w-[calc(342px+136pt)]">
                     <PosIndoExperience {...posIndoData} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
+                  <div className="w-[68vw] sm:w-[calc(304px+136pt)] md:w-[calc(342px+136pt)]">
                     <ExperienceCard {...experiences[1]} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
+                  <div className="w-[68vw] sm:w-[calc(304px+136pt)] md:w-[calc(342px+136pt)]">
                     <ExperienceCard {...experiences[0]} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
+                  <div className="w-[68vw] sm:w-[calc(304px+136pt)] md:w-[calc(342px+136pt)]">
                     <ExperienceCard {...experiences[2]} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
+                  <div className="w-[68vw] sm:w-[calc(304px+136pt)] md:w-[calc(342px+136pt)]">
                     <ExperienceCard {...experiences[4]} lang={lang} />
                   </div>
-                  <div className="w-[85vw] sm:w-[calc(380px+170pt)] md:w-[calc(428px+170pt)]">
+                  <div className="w-[68vw] sm:w-[calc(304px+136pt)] md:w-[calc(342px+136pt)]">
                     <ExperienceCard {...experiences[3]} lang={lang} />
                   </div>
                 </div>
@@ -851,8 +856,8 @@ function App() {
                 <p className="text-sm font-cambria text-[#222222] text-center">Certifications, Licenses, Memberships, Competencies, Skills, and Achievements.</p>
               </div>
               <div className="flex flex-col items-center gap-1 opacity-40 w-1/2">
-                <h2 className="text-xl md:text-2xl font-bold text-[#222222] text-center">Personal Designs</h2>
-                <p className="text-sm font-cambria text-[#222222] text-center">Creative Works & Portfolios</p>
+                <h2 className="text-xl md:text-2xl font-bold text-[#222222] text-center">Creative Craft</h2>
+                <p className="text-sm font-cambria text-[#222222] text-center">Design, Illustration, Branding, Typography, Photography, and Experiments</p>
               </div>
             </div>
             <div className="flex flex-col md:flex-row items-stretch w-full gap-8">
@@ -919,8 +924,8 @@ function App() {
                 `}} />
                 
                 <div className="flex md:hidden flex-col items-center gap-1 mb-6 opacity-40 w-full">
-                  <h2 className="text-xl md:text-2xl font-bold text-[#222222] text-center">Personal Designs</h2>
-                  <p className="text-sm font-cambria text-[#222222] text-center">Creative Works & Portfolios</p>
+                  <h2 className="text-xl md:text-2xl font-bold text-[#222222] text-center">Creative Craft</h2>
+                  <p className="text-sm font-cambria text-[#222222] text-center">Design, Illustration, Branding, Typography, Photography, and Experiments</p>
                 </div>
                 
                 <div className="flex items-center justify-center gap-4 w-full h-full">
@@ -976,9 +981,9 @@ function App() {
       {/* Academic Logbook Section */}
       <section id="akademik" className="pt-0 pb-0 bg-[#F4F3F0]">
         <div className="w-full px-[10pt]">
-          <div className="flex flex-col items-center justify-center gap-1 mt-[25pt] mb-[10pt] opacity-40">
+          <div className="flex flex-col items-center justify-center gap-1 mt-[25pt] mb-[25pt] opacity-40">
             <h2 className="text-xl md:text-2xl font-bold text-[#222222]">Academic Logbook</h2>
-            <p className="text-sm font-cambria text-[#222222] text-center">Thesis, Publications, Research Planning, Projects, Seminars, and Transcripts</p>
+            <p className="text-sm font-cambria text-[#222222] text-center">Thesis, Publications, Research Planning, Projects, Events, Competitions, Seminars, and Transcripts</p>
           </div>
           
           <div className="flex items-center justify-center gap-4 max-w-7xl mx-auto w-full relative">
@@ -1049,9 +1054,9 @@ function App() {
                 <div className="flex flex-col md:flex-row items-center md:items-stretch w-full gap-8">
                   {/* Text Section (30%) */}
                   <div className="w-full md:w-[30%] flex flex-col items-center justify-start text-center order-2 md:order-1 h-full py-4" style={{ gap: '0' }}>
-                  <div className="flex flex-col items-center w-full mt-[35pt]">
-                    <div className="w-full min-h-[80px] md:min-h-[100px] flex flex-col justify-end items-center gap-2">
-                      <h3 className={`text-xl md:text-2xl text-[#222222] font-serif m-0 leading-tight ${transcriptPage < 2 ? 'hidden' : ''}`}>
+                  <div className="flex flex-col items-center w-full mt-[0pt]">
+                    <div className="w-full h-[80px] md:h-[100px] flex flex-col justify-end items-center gap-2 shrink-0">
+                      <h3 className={`text-xl md:text-2xl text-[#222222] font-serif m-0 leading-tight ${transcriptPage < 2 ? 'opacity-0' : ''}`}>
                         {transcriptPage === 3 ? transcriptLevels[transcriptPage].institution : (
                           <>
                             Matematika dan<br />
@@ -1062,7 +1067,7 @@ function App() {
                       </h3>
                     </div>
                     
-                    <div className="w-full flex justify-center items-start mt-[20pt]">
+                    <div className="w-full flex justify-center items-start mt-[20pt] shrink-0">
                       {transcriptPage !== 3 ? (
                         <p className="text-lg md:text-xl text-[#5B6572] font-serif italic transition-opacity duration-300 m-0 leading-tight">
                           {transcriptLevels[transcriptPage].title}
@@ -1074,21 +1079,20 @@ function App() {
                       )}
                     </div>
                     
-                    <div className="flex flex-col items-center justify-start w-full mt-[15pt]">
+                    <div className="flex flex-col items-center justify-start w-full mt-[15pt] shrink-0">
                       {transcriptLevels[transcriptPage].period && (
                         <div className="flex flex-col items-center">
                           <p className="text-sm md:text-base text-[#5B6572]/80 font-sans transition-opacity duration-300 m-0 leading-tight">
                             {transcriptLevels[transcriptPage].period}
                           </p>
                         {transcriptPage === 3 && (
-                          <>
-                            <p className="text-lg md:text-xl text-[#5B6572] font-serif transition-opacity duration-300 m-0 leading-tight mt-[25pt]">
-                              Program Studi: Logistik Bisnis
-                            </p>
-                            <p className="text-lg md:text-xl text-[#5B6572] font-serif transition-opacity duration-300 m-0 leading-tight mt-[7pt]">
-                              Akreditasi: {transcriptLevels[transcriptPage].akreditasiBottom || transcriptLevels[transcriptPage].akreditasi}
-                            </p>
-                          </>
+                          <div className="grid grid-cols-[auto_auto_1fr] gap-x-2 gap-y-[7pt] text-lg md:text-xl text-[#5B6572] font-serif transition-opacity duration-300 m-0 leading-tight mt-[25pt] text-left">
+                            <span className="text-right">Program Studi</span><span>:</span><span>Logistik Bisnis</span>
+                            <span className="text-right">Akreditasi</span><span>:</span><span>{transcriptLevels[transcriptPage].akreditasiBottom || transcriptLevels[transcriptPage].akreditasi}</span>
+                            <span className="text-right">SKS</span><span>:</span><span>149</span>
+                            <span className="text-right">IPK</span><span>:</span><span>3.26<span className="opacity-50">/4.00</span></span>
+                            <span className="text-right">Predikat</span><span>:</span><span>Sangat Memuaskan</span>
+                          </div>
                         )}
                         <a 
                           href={transcriptLevels[transcriptPage].link}
@@ -1098,11 +1102,16 @@ function App() {
                           style={{ WebkitTapHighlightColor: 'transparent' }}
                         >
                           <img 
+                            key={transcriptPage === 3 ? 'pdikti' : 'kemdikbud'}
                             src={transcriptPage === 3 
-                              ? "https://github.com/dhnaath/Resources-Portofolio/blob/main/Desain%20tanpa%20judul%20(2).png?raw=true" 
+                              ? "https://github.com/dhnaath/Portofolio/blob/main/PDIKTI%20BARU.png?raw=true" 
                               : "https://github.com/dhnaath/Resources-Portofolio/blob/main/Desain%20tanpa%20judul%20(1).png?raw=true"}
                             alt="Document"
-                            className="h-[130px] w-auto object-contain pointer-events-none select-none"
+                            className={`object-cover object-center pointer-events-none select-none ${
+                              transcriptPage === 3
+                                ? "w-[190px] h-[57px] md:w-[228px] md:h-[68px]"
+                                : "w-[170px] h-[51px] md:w-[204px] md:h-[61px]"
+                            }`}
                             draggable={false}
                             onContextMenu={(e) => e.preventDefault()}
                           />
@@ -1206,14 +1215,16 @@ function App() {
                       lightMode={true}
                     />
                   </div>
-                  <div className="w-[80vw] sm:w-[361px] md:w-[406px] shrink-0">
-                    <div className="w-full h-[290px] rounded-[2rem] border-2 border-[#5B6572]/20 overflow-hidden shadow-sm bg-[#F4F3F0] relative">
-                      <img 
-                        src="https://github.com/dhnaath/Resources-Portofolio/blob/main/IMG_1537.jpg?raw=true" 
-                        alt="Kegiatan" 
-                        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} 
-                      />
-                    </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
+                    <FlipbookCard 
+                      category="TUGAS KELOMPOK"
+                      title="Wawancara"
+                      content="Kegiatan Wawancara"
+                      darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/IMG_1537.jpg?raw=true"
+                      customIcon={<ArrowDownRight size={24} />}
+                      disableFlip={true}
+                      lightMode={true}
+                    />
                   </div>
                   <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
                     <FlipbookCard 
@@ -1276,7 +1287,7 @@ function App() {
                   <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
                     <FlipbookCard 
                       category="Seminar"
-                      title="Awardee for Favorite Judges"
+                      title="Favorite Judges"
                       content="Penghargaan untuk Favorite Judges pada acara Seminar Internasional."
                       darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/FAVJUDG.png?raw=true"
                       disableFlip={true}
@@ -1288,7 +1299,7 @@ function App() {
                       category="Kerja Praktik I"
                       title="Rencana Penelitian"
                       content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟭 dan 𝗟𝗮𝗽𝗼𝗿𝗮𝗻 𝗔𝗸𝗵𝗶𝗿 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟳 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-                      darkContent="Optimalisasi Persediaan Toyota Motor Oil (TMO) Engine Oil pada Gudang Suku Cadang Toyota Auto2000 Cabang Pasteur Menggunakan Metode EOQ Deterministik dan Least Unit Cost"
+                      darkContent={<div className="font-serif font-bold text-lg md:text-xl leading-tight text-[#FFFFFF] not-italic">Optimalisasi Persediaan Toyota Motor Oil (TMO) Engine Oil pada Gudang Suku Cadang Toyota Auto2000 Cabang Pasteur Menggunakan Metode EOQ Deterministik dan Least Unit Cost</div>}
                       topLeftIcon={<FileText size={24} />}
                       customIcon={<ArrowDownRight size={24} />}
                       link="https://drive.google.com/file/d/1ZpdHl4ABP2CNCyaZlSs19R5ngxjG09Ke/view?usp=drive_link"
@@ -1299,7 +1310,7 @@ function App() {
                       category="Kerja Praktik II"
                       title="Skripsi"
                       content="Sebagai syarat untuk memenuhi kelulusan pada mata kuliah 𝗞𝗲𝗿𝗷𝗮 𝗣𝗿𝗮𝗸𝘁𝗶𝗸 𝟮 dan 𝗦𝗸𝗿𝗶𝗽𝘀𝗶 dalam kurikulum 𝗦𝗲𝗺𝗲𝘀𝘁𝗲𝗿 𝟴 pada studi 𝗦𝗮𝗿𝗷𝗮𝗻𝗮 𝗧𝗲𝗿𝗮𝗽𝗮𝗻 𝗟𝗼𝗴𝗶𝘀𝘁𝗶𝗸."
-                      darkContent="Analisis Kualitas Pelayanan PT. Pos Indonesia (Persero) Cabang KPRK Sintang 78600 untuk Meningkatkan Kepuasan Pelanggan dengan Integrasi ServQual dan IPA"
+                      darkContent={<div className="font-serif font-bold text-lg md:text-xl leading-tight text-[#FFFFFF] not-italic">Analisis Kualitas Pelayanan PT. Pos Indonesia (Persero) Cabang KPRK Sintang 78600 untuk Meningkatkan Kepuasan Pelanggan dengan Integrasi ServQual dan IPA</div>}
                       topLeftIcon={<FileText size={24} />}
                       customIcon={<ArrowDownRight size={24} />}
                       link="https://drive.google.com/file/d/1ACG-GMGG3btYs0Vz0ZdQHzoa4eNDucmU/view?usp=drive_link"
@@ -1405,19 +1416,18 @@ function App() {
                       category="KOMPETISI DEBAT"
                       title={<>English Festival and<br />National Schools Debating<br />Championship 2019</>}
                       content="Peserta English Festival and National Schools Debating Championship 2019. Penyelenggara: FKIP UNTAN dan MGMP Bahasa Inggris Kota Pontianak."
-                      darkContent={<div className="font-serif font-bold text-3xl leading-tight text-[#222222] not-italic"><span className="block mb-2">FKIP UNTAN</span><span className="block mb-2">MGMP Bahasa Inggris</span><span className="block">Kota Pontianak</span></div>}
+                      darkContent={<div className="font-serif font-bold text-3xl leading-tight text-[#FFFFFF] not-italic"><span className="block mb-2">FKIP UNTAN</span><span className="block mb-2">MGMP Bahasa Inggris</span><span className="block">Kota Pontianak</span></div>}
+                    />
+                  </div>
+                  <div className="w-[80vw] sm:w-[361px] md:w-[406px]">
+                    <FlipbookCard 
+                      category="PRAMUKA"
+                      title="Bumi Perkemahan Siluk Muara Tawang"
+                      content="Kegiatan Bumi Perkemahan Siluk Muara Tawang."
+                      darkImage="https://github.com/dhnaath/Resources-Portofolio/blob/main/ChatGPT%20Image%2023%20Jul%202026,%2011.29.33.png?raw=true"
                       disableFlip={true}
                       lightMode={true}
                     />
-                  </div>
-                  <div className="w-[80vw] sm:w-[361px] md:w-[406px] shrink-0">
-                    <div className="w-full h-[290px] rounded-[2rem] border-2 border-[#5B6572]/20 overflow-hidden shadow-sm bg-[#F4F3F0] relative">
-                      <img 
-                        src="https://github.com/dhnaath/Resources-Portofolio/blob/main/ChatGPT%20Image%2023%20Jul%202026,%2011.29.33.png?raw=true" 
-                        alt="Foto Kegiatan" 
-                        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none" draggable={false} onContextMenu={(e) => e.preventDefault()} 
-                      />
-                    </div>
                   </div>
                   <div className="w-[80vw] sm:w-[361px] md:w-[406px] shrink-0">
                     <div className="w-full h-[290px] rounded-[2rem] border-2 border-[#5B6572]/20 overflow-hidden shadow-sm bg-white relative">

@@ -16,6 +16,7 @@ interface ExperienceCardProps {
   employmentType?: string;
   employmentTypeEn?: string;
   companyLogo?: string;
+  tagColor?: string;
 }
 
 export function ExperienceCard({
@@ -33,10 +34,12 @@ export function ExperienceCard({
   employmentType,
   employmentTypeEn,
   companyLogo,
+  tagColor,
   lang = 'ID',
 }: ExperienceCardProps & { lang?: 'ID' | 'EN' }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const photoList = images && images.length > 0 ? images : [image];
+  const color = tagColor || '#102A43';
 
   return (
     <div className="bg-[#FFFFFF] rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
@@ -45,7 +48,11 @@ export function ExperienceCard({
           {(() => {
             const tags = description.split(/[;:\n]+/).map(t => t.trim()).filter(Boolean);
             return tags.map((tag, i) => (
-              <span key={i} className="bg-[#102A43]/10 text-[#102A43] text-[10px] sm:text-xs font-medium px-3 py-1.5 rounded-full border border-[#102A43]/20 flex-1 text-center whitespace-nowrap">
+              <span 
+                key={i} 
+                className="text-[10px] sm:text-xs font-medium px-3 py-1.5 rounded-full border flex-1 text-center whitespace-nowrap"
+                style={{ backgroundColor: `${color}1A`, color: color, borderColor: `${color}33` }}
+              >
                 {tag}
               </span>
             ));

@@ -21,10 +21,12 @@ interface KspNusantaraExperienceProps {
   companyLogo?: string;
   positions: Position[];
   description?: string;
+  tagColor?: string;
 }
 
-export function KspNusantaraExperience({ company, companyLogo, positions, description = "", lang = 'ID' }: KspNusantaraExperienceProps & { lang?: 'ID' | 'EN' }) {
+export function KspNusantaraExperience({ company, companyLogo, positions, description = "", tagColor, lang = 'ID' }: KspNusantaraExperienceProps & { lang?: 'ID' | 'EN' }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const color = tagColor || '#F57C00';
 
   // Collect all unique images from all positions
   const allImages = Array.from(new Set(positions.flatMap(pos => [pos.image, pos.image2, pos.image3, pos.image4]).filter(Boolean) as string[]));
@@ -36,7 +38,11 @@ export function KspNusantaraExperience({ company, companyLogo, positions, descri
           {(() => {
             const tags = description.split(/[;:\n]+/).map(t => t.trim()).filter(Boolean);
             return tags.map((tag, i) => (
-              <span key={i} className="bg-[#102A43]/10 text-[#102A43] text-[10px] sm:text-xs font-medium px-3 py-1.5 rounded-full border border-[#102A43]/20 flex-1 text-center whitespace-nowrap">
+              <span 
+                key={i} 
+                className="text-[10px] sm:text-xs font-medium px-3 py-1.5 rounded-full border flex-1 text-center whitespace-nowrap"
+                style={{ backgroundColor: `${color}1A`, color: color, borderColor: `${color}33` }}
+              >
                 {tag}
               </span>
             ));

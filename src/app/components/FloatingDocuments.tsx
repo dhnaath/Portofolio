@@ -140,49 +140,6 @@ function FloatingDocumentCard({
 }
 
 
-import { memo } from 'react';
-
-const LinkedInBadge = memo(function LinkedInBadge() {
-  useEffect(() => {
-    const renderBadge = () => {
-      if (window.LIRenderAll) {
-        try {
-          window.LIRenderAll();
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    };
-
-    if (!document.querySelector('script[src="https://platform.linkedin.com/badges/js/profile.js"]')) {
-      const script = document.createElement("script");
-      script.src = "https://platform.linkedin.com/badges/js/profile.js";
-      script.async = true;
-      script.defer = true;
-      script.onload = renderBadge;
-      document.body.appendChild(script);
-    } else {
-      // If script is already there, give it a tiny delay to ensure DOM is ready
-      setTimeout(renderBadge, 300);
-    }
-  }, []);
-
-  return (
-    <div className="bg-white rounded-lg p-2 scale-[0.85] origin-center text-[#222222] max-h-full overflow-y-auto no-scrollbar pointer-events-auto">
-      <div 
-        className="badge-base LI-profile-badge" 
-        data-locale="in_ID" 
-        data-size="medium" 
-        data-theme="light" 
-        data-type="VERTICAL" 
-        data-vanity="dhnaath" 
-        data-version="v1"
-      >
-        <a className="badge-base__link LI-simple-link" href="https://id.linkedin.com/in/dhnaath?trk=profile-badge">Dhia Najmi Athallah</a>
-      </div>
-    </div>
-  );
-});
 
 export function FloatingDocuments() {
   return (
@@ -211,7 +168,7 @@ export function FloatingDocuments() {
           cardHeight="145px"
           bgColor="#0a66c2"
           customFront={<div className="flex w-full h-full items-center justify-center p-8"><img src="https://github.com/dhnaath/Resources-Portofolio/blob/main/Linkedin-logo-white-png-wordmark-icon-horizontal-900x233.png?raw=true" alt="LinkedIn Logo" className="w-[158px] h-auto object-contain drop-shadow-md" /></div>}
-          customBack={<LinkedInBadge />}
+          customBack={<div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest px-4 py-2 border rounded-full transition-colors text-[#F4F3F0] border-[#F4F3F0] hover:bg-[#222222] hover:text-[#FFFFFF] hover:border-[#222222]"><span>Click to open</span><ExternalLink size={16} /></div>}
           handleContent={<div className="flex w-full h-full items-center justify-center -translate-x-[4px]"><img src="https://github.com/dhnaath/Resources-Portofolio/blob/main/linkedin-130_1024.png?raw=true" alt="LinkedIn" className="w-[42px] h-auto object-contain" style={{ transform: "rotate(0deg)" }} /></div>}
         />
       </div>
